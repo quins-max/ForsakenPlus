@@ -1,3 +1,6 @@
+-- Forsaken Plus Made by Naiko Scripts --
+-- Copies of this script must contain the original credits and be open source --
+
 if workspace.DistributedGameTime < 4 then
 	task.wait(4 - workspace.DistributedGameTime)
 end
@@ -16,7 +19,7 @@ end)
 
 -- General Variables --
 
-Version = "1.81"
+Version = "1.9"
 Players = game:GetService("Players")
 LocalPlayer = Players.LocalPlayer
 LocalCharacter = LocalPlayer.Character
@@ -33,8 +36,8 @@ MainUI = PlayerGui:FindFirstChild("MainUI") or PlayerGui:WaitForChild("MainUI", 
 PlayerData = LocalPlayer:FindFirstChild("PlayerData") or LocalPlayer:WaitForChild("PlayerData", 20)
 PlusFolderSettings = Instance.new("Folder")
 SideBar = MainUI:FindFirstChild("Sidebar") or MainUI:WaitForChild("Sidebar", 20)
-Buttons = SideBar:FindFirstChild("Buttons") or SideBar:FindFirstChild("Middle") or SideBar:WaitForChild("Buttons", 20) or SideBar:WaitForChild("Middle", 20)
-MainButton = Buttons:FindFirstChild("Settings") or Buttons:FindFirstChild("Stats") or Buttons:WaitForChild("Settings", 20) or Buttons:FindFirstChild("Stats") or Buttons:WaitForChild("Stats", 20)
+Buttons = SideBar:FindFirstChild("Buttons") or SideBar:FindFirstChild("Middle") or SideBar:FindFirstChild("Stats",true) and SideBar:FindFirstChild("Stats",true).Parent or SideBar:WaitForChild("Buttons", 4) or SideBar:WaitForChild("Middle", 4) 
+MainButton = Buttons:FindFirstChild("Settings") or Buttons:FindFirstChild("Stats") or Buttons:WaitForChild("Settings", 4) or Buttons:FindFirstChild("Stats") or Buttons:WaitForChild("Stats", 4)
 SidePlusButton = MainButton and MainButton:Clone()
 PlusButton = SidePlusButton and SidePlusButton:FindFirstChild("Button") or nil
 PulloutFramePlus = SidePlusButton and SidePlusButton:FindFirstChild("PulloutHolder") and SidePlusButton.PulloutHolder:FindFirstChild("PulloutFrame")
@@ -65,6 +68,7 @@ SkinsAssets = AssetsFolder and AssetsFolder:FindFirstChild("Skins")
 SurvivorAssets = AssetsFolder and AssetsFolder:FindFirstChild("Survivors")
 KillerAssets = AssetsFolder and AssetsFolder:FindFirstChild("Killers")
 FlowGame = ReplicatedStorage:FindFirstChild("FlowGame",true)
+StatusEffects = ReplicatedStorage:FindFirstChild("StatusEffects",true)
 Network = ReplicatedStorage:FindFirstChild("Modules") and (ReplicatedStorage:FindFirstChild("Modules"):FindFirstChild("Network",true) and ReplicatedStorage:FindFirstChild("Modules"):FindFirstChild("Network",true):FindFirstChild("Network")) or ReplicatedStorage:FindFirstChild("Modules"):FindFirstChild("Network",true) or nil
 InGame = workspace:FindFirstChild("Map") and workspace:FindFirstChild("Map"):FindFirstChild("Ingame")
 GameMap = InGame and InGame:FindFirstChild("Map") or nil
@@ -74,13 +78,13 @@ local UIScale = Instance.new("UIScale")
 IsUnderground,IsFixingGenerator,WarnedAboutFilesCompatability = false,false,false
 OverriddenAnimations,AllAnimations,Values = {},{["Default Roblox"] = {["Idle"] = "http://www.roblox.com/asset/?id=180435571",["Walk"] = "http://www.roblox.com/asset/?id=180426354",["Run"] = "http://www.roblox.com/asset/?id=180426354"}},{}
 local ModulesOptions,LastTrack,NoliConfig,GetAnimationType,LastAnimOriginalUsed,UpdateAnim,CanPlayOverrideAnim,CurrentQTEAzure,TeleportSound,GetFunction
-ColorPresets = {["White"] = Color3.fromRGB(255,255,255),["Teal"] = Color3.fromRGB(40,40,40),["Green"] = Color3.fromRGB(50,50,50),["Purple"] = Color3.fromRGB(35, 20, 45),["Red"] = Color3.fromRGB(60, 20, 20),["Blue"] = Color3.fromRGB(20, 30, 50),["Cyan"] = Color3.fromRGB(30, 50, 60),["Gold"] = Color3.fromRGB(70, 60, 30),["Orange"] = Color3.fromRGB(70, 40, 20)}
+ColorPresets = {["White"] = Color3.fromRGB(255,255,255),["Teal"] = Color3.fromRGB(3,252,157),["Green"] = Color3.fromRGB(0,255,0),["Light Green"] = Color3.fromRGB(191, 255, 191),["Purple"] = Color3.fromRGB(158, 0, 179),["Red"] = Color3.fromRGB(255,0,0),["Blue"] = Color3.fromRGB(0,0,255),["Cyan"] = Color3.fromRGB(0,255,255),["Gold"] = Color3.fromRGB(255,215,0),["Orange"] = Color3.fromRGB(255,135,15)}
 IgnoreKeybinds = {"W", "A", "S", "D"}
-GameVersionForScript = "2026-09-25"
+GameVersionForScript = "2026-14-10"
 local FeatureLoadout; FeatureLoadout = {
     ["EnviromentFunctions"] = {
           ["TabAttributes"] = {
-            ["DisplayTitle"] = "Script Made by krow | " .. tostring(Version),
+            ["DisplayTitle"] = "Script Made by Naiko Scripts | " .. tostring(Version),
             ["LayoutOrder"] = 666
         },
         ["hookmetamethod"] = {
@@ -125,7 +129,7 @@ local FeatureLoadout; FeatureLoadout = {
             ["LayoutOrder"] = 666,
             ["Savable"] = false,
             ["InstanceType"] = "BoolValue",
-            ["DefaultInstanceValue"] = game.GameId == 6331902150 or game.GameId == 7464167604,
+            ["DefaultInstanceValue"] = game.GameId == 6331902150 or game.GameId == 7464167604 or game.GameId == 7919224306,
             ["Requirement"] = true
         },
         ["PrivateServer"] = {
@@ -341,7 +345,7 @@ local FeatureLoadout; FeatureLoadout = {
             end,
             ["OnLoop"] = function(self)
                 local IsNear = self:IsPlayersNear(32)
-                local CurrentGrid = self.Instance:GetAttribute("CurrentGrid")
+                local CurrentGrid = self.Instance:GetAttribute("CurrentGrid") or 6
                 local RNG = Random.new()
                 local GenCD = (not IsNear and GetValue("SpeedUpCooldown") and self.Instance:GetAttribute("MinValue")) or RNG:NextNumber(GetValue("GeneratorCooldown") - 0.1 * GetValue("GeneratorCooldown"),GetValue("GeneratorCooldown") + 0.1 * GetValue("GeneratorCooldown"))
                 self.Instance:SetAttribute("CurrentSpeed",(GenCD / math.pow(CurrentGrid,2)))
@@ -385,7 +389,7 @@ local FeatureLoadout; FeatureLoadout = {
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
-            ["Requirement"] = not (KillerAssets and KillerAssets:FindFirstChild("Nosferatu"))
+            ["Requirement"] = "Killer:Nosferatu"
         },
         ["EscapeCooldown"] = {
             ["DisplayDescription"] = "The cooldown in seconds before pressing a key",
@@ -394,7 +398,7 @@ local FeatureLoadout; FeatureLoadout = {
             ["Savable"] = true,
             ["InstanceType"] = "NumberValue",
             ["DefaultInstanceValue"] = 0.5,
-            ["Requirement"] = (KillerAssets and KillerAssets:FindFirstChild("Nosferatu")) and "AutoEscape" or true,
+            ["Requirement"] = "Killer:Nosferatu|AutoEscape",
             ["ExtraData"] = {
                 ["MaxValue"] = 1.2,
                 ["MinValue"] = 0.2,
@@ -402,7 +406,7 @@ local FeatureLoadout; FeatureLoadout = {
             },
             ["ScriptFunction"] = function(self, Value)
                 if Value <= 0.3 then
-                    GetValue("EscapeCooldown",true):SetAttribute("DisplayDescription",self["DisplayDescription"] .. " " .. RichTextGradientColor("(TOO FAST)",{Color3.fromRGB(80, 80, 80),Color3.fromRGB(40, 40, 40),Color3.fromRGB(80, 80, 80)}))
+                    GetValue("EscapeCooldown",true):SetAttribute("DisplayDescription",self["DisplayDescription"] .. " " .. RichTextGradientColor("(TOO FAST)",{Color3.fromRGB(251, 107, 43),Color3.fromRGB(251, 165, 43),Color3.fromRGB(251, 107, 43)}))
                 else
                     GetValue("EscapeCooldown",true):SetAttribute("DisplayDescription",self["DisplayDescription"])
                 end
@@ -435,34 +439,50 @@ local FeatureLoadout; FeatureLoadout = {
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
-            ["Requirement"] = (KillerAssets and KillerAssets:FindFirstChild("Azure") and "require" or true),
+            ["Requirement"] = "Killer:Azure|require",
+            ["HookInstalled"] = false,
             ["ScriptFunction"] = function(self, Value)
-                if CurrentQTEAzure and Value then
-                    CurrentQTEAzure:AddProgress(100)
-                    CurrentQTEAzure = nil
+                if not Value then
+                    return
                 end
+                if typeof(CurrentQTEAzure) == "table" and typeof(CurrentQTEAzure.AddProgress) == "function" then
+                    CurrentQTEAzure:AddProgress(100)
+                end
+                CurrentQTEAzure = nil
             end,
             ["CustomSetup"] = function(self)
-                local AzureQTE = KillerAssets and KillerAssets:FindFirstChild("Azure") and KillerAssets:FindFirstChild("Azure"):FindFirstChild("cl_ConstructQTE",true)
-                if IsRequireSupported and AzureQTE then
-                    local RequiredModule = require(AzureQTE)
-                    task.delay(1,function()
-                        local origin;origin = hookfunction(RequiredModule.new,function(...)
-                            local QTEAzure = origin(...)
-                            task.delay(0.05,function()
-                                if typeof(QTEAzure) == "table" and QTEAzure.AddProgress then
-                                    if GetValue("AutoDisarm") then
-                                        QTEAzure:AddProgress(100)
-                                    else
-                                        CurrentQTEAzure = QTEAzure
+                if typeof(hookfunction) ~= "function" or not GetValue("require") then
+                    return
+                end
+                local Time = workspace.DistributedGameTime
+                while not self.HookInstalled and Time < workspace.DistributedGameTime + 5 do
+                    local Azure = KillerAssets and (KillerAssets:FindFirstChild("Azure") or KillerAssets:FindFirstChild("!Azure"))
+                    local AzureQTE = Azure and Azure:FindFirstChild("cl_ConstructQTE", true)
+                    if AzureQTE then
+                        local Got, RequiredModule = pcall(require, AzureQTE)
+                        if Got and typeof(RequiredModule) == "table" and typeof(RequiredModule.new) == "function" then
+                            local OriginalNew
+                            OriginalNew = hookfunction(RequiredModule.new, function(selfArg, ...)
+                                local QTEAzure = OriginalNew(selfArg, ...)
+                                task.delay(0.05, function()
+                                    if typeof(QTEAzure) == "table" and typeof(QTEAzure.AddProgress) == "function" then
+                                        if GetValue("AutoDisarm") then
+                                            QTEAzure:AddProgress(100)
+                                        else
+                                            CurrentQTEAzure = QTEAzure
+                                        end
                                     end
-                                else
-                                    warn("Failed Doing QTE For Azure")
-                                end
+                                end)
+                                return QTEAzure
                             end)
-                            return QTEAzure 
-                        end)
-                    end)
+                            if typeof(OriginalNew) == "function" then
+                                self.HookInstalled = true
+                            end
+                        end
+                    end
+                    if not self.HookInstalled then
+                        task.wait(0.5)
+                    end
                 end
             end
         },
@@ -480,7 +500,7 @@ local FeatureLoadout; FeatureLoadout = {
             ["Savable"] = false,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
-            ["Requirement"] = "hookmetamethod|require|OfficialGame",
+            ["Requirement"] = "hookmetamethod|OfficialGame",
             ["ScriptFunction"] = function(self, Value)
                 if workspace:GetAttribute("Invincible") == nil then
                     workspace:SetAttribute("Invincible", Value)
@@ -506,7 +526,7 @@ local FeatureLoadout; FeatureLoadout = {
                     local Result = workspace:GetPartBoundsInRadius(Position, 2.5, IsHitboxNotNearParams)
                     return #Result == 0
                 else
-                    ColoredPrint("HitboxPart/Position/HumanoidRootPart is nil while trying to check if near", "info", Color3.new(0.3,0.3,0.3))
+                    ColoredPrint("HitboxPart/Position/HumanoidRootPart is nil while trying to check if near", "info", Color3.new(1,0.25,0))
                     return false
                 end
             end,
@@ -545,7 +565,7 @@ local FeatureLoadout; FeatureLoadout = {
                         repeat task.wait(0.25) until (LocalRoot and LocalHead and LocalHumanoid and MainUI.Enabled)
                     end
                     local MapName
-                    if GameMap and GameMap:FindFirstChild("Config") then
+                    if GameMap and GameMap:FindFirstChild("Config") and GetValue("require") then
                         local MapData = require(GameMap:FindFirstChild("Config"))
                         if MapData and MapData["DisplayName"] ~= nil then
                             MapName = MapData["DisplayName"]
@@ -606,7 +626,7 @@ local FeatureLoadout; FeatureLoadout = {
                             })
                             GetValue("Invincible",true):SetAttribute("Requirement", true)
                         end
-                        return ColoredPrint("Failed to go invincible! Tried 3 Times and still failed.", "info", Color3.new(0.3,0.3,0.3))
+                        return ColoredPrint("Failed to go invincible! Tried 3 Times and still failed.", "info", Color3.new(1,0.25,0))
                     end
                 else
                     IsUnderground = false
@@ -624,7 +644,7 @@ local FeatureLoadout; FeatureLoadout = {
                 end)
             end,
             ["CustomSetup"] = function(self)
-                if GetValue("OfficialGame") then
+                if GetValue("OfficialGame") and GetValue("hookmetamethod") then
                     task.spawn(function()
                         export type DesyncHook = {DesyncNumber:number,BufferCorruption:buffer}
                         export type CorruptArguments = {Number:number,Table1:table,NilObject:any,Table2:table}
@@ -661,80 +681,88 @@ local FeatureLoadout; FeatureLoadout = {
             ["DisplayDescription"] = "Disables Thin Killer Walls",
             ["DisplayTitle"] = "Disable Killer Walls",
             ["LayoutOrder"] = 2,
-            ["Savable"] = false,
+            ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
+            ["GetNearbyWalls"] = function(self, Selected)
+                if not Selected or not GameMap then return {} end
+                local Params = OverlapParams.new()
+                Params.BruteForceAllSlow = true
+                Params.IncludeInstances = {GameMap}
+                local BoxSize = Selected.Size
+                local Result = workspace:GetPartBoundsInBox(Selected.CFrame,Selected.Size,Params)
+                local Walls = {}
+                for i, v in Result do
+                    if not(v == Selected or v.Parent.Name:find("Decoration") or v.CollisionGroup ~= "Killers" or v.Name:lower() == "inviisble") then
+                        Walls[#Walls + 1] = v
+                    end
+                end
+                return Walls
+            end,
+            ["GetNearbyDecoration"] = function(self, Selected)
+                if not Selected or not GameMap or Selected.Name:lower() == "inviisble" then return {} end
+                local Params = OverlapParams.new()
+                Params.BruteForceAllSlow = true
+                Params.IncludeInstances = GameMap:QueryDescendants("#KillerWallDetail,#KillerFrame")
+                local Result = workspace:GetPartBoundsInBox(Selected.CFrame,Selected.Size,Params)
+                local Decorations = {}
+                for i, v in Result do
+                    local MainDecoration = v:FindFirstAncestor("KillerWallDetail") or v:FindFirstAncestor("KillerFrame")
+                    if MainDecoration and not table.find(Decorations, MainDecoration) then
+                        table.insert(Decorations, MainDecoration)
+                    end
+                end
+                return Decorations
+            end,
+            ["DefaultProperty"] = function(self,Object,Property)
+                if not Object then return end
+                if not Object:GetAttribute(Property) then
+                    Object:SetAttribute(Property,Object[Property])
+                end
+            end,
             ["HandleDisableKillerWalls"] = function(self,MainValue,Tween)
-                local KillerDoorsFolder = GameMap and (GameMap:FindFirstChild("KillerDoors",true) or GameMap:FindFirstChild("Killer Doors",true))
-                local KillerCollisions = GameMap and GameMap:FindFirstChild("KillerOnly",true)
-                local MainTweenInfo = TweenInfo.new(0.5,Enum.EasingStyle.Quad,Enum.EasingDirection.InOut)
                 local function ColorBrightness(Color,Brightness)
                     local H, S, V = Color:ToHSV()
                     return Color3.fromHSV(H, S, math.clamp(V * Brightness, 0, 1))
                 end
-                if KillerDoorsFolder then
-                    for i,v in KillerDoorsFolder:GetChildren() do
-                        if v:IsA("BasePart") then
-                            if math.min(v.Size.X,v.Size.Z) > 5 then continue end
+                if GameMap then
+                    for i,v in GameMap:QueryDescendants("BasePart[CollisionGroup=Killers]") do
+                        if math.min(v.Size.X,v.Size.Z) > 5 or (v.Size.Magnitude > 95 and #self:GetNearbyWalls(v) == 0) or v.Parent.Name:upper() == "GENERATOR" then continue end
+                        self:DefaultProperty(v,"CanCollide")
+                        self:DefaultProperty(v,"Color")
+                        if not v:GetAttribute("WalkedThrough") then
                             v.CanTouch = true
-                            local Value = not v:GetAttribute("WalkedThrough") and MainValue or false
-                            local Color = Value and Color3.new(0.1,0.1,0.1) or Color3.new(0.3,0.3,0.3)
-                            local VertexColor = Value and Vector3.new(30,30,30) or Vector3.new(100,100,100)
-                            local ShouldTween --= Tween and v:GetAttribute("WalkedThrough") ~= nil
-                            if ShouldTween then
-                                TweenService:Create(v,MainTweenInfo,{Color = Color}):Play()
-                            else
-                                v.Color = Color
+                        end
+                        local Value = not v:GetAttribute("WalkedThrough") and MainValue or false
+                        local Color = Value and Color3.new(0,1,0) or v:GetAttribute("Color") or Color3.new(1,0,0)
+                        local Mesh = v:FindFirstChildOfClass("SpecialMesh")
+                        local NearbyDecorations = self:GetNearbyDecoration(v)
+                        self:DefaultProperty(Mesh,"VertexColor")
+                        local VertexColor = Value and Vector3.new(0,Mesh and Mesh.VertexColor.Magnitude or 255,0) or Mesh and Mesh:GetAttribute("VertexColor") or Vector3.new(255,0,0)
+                        v.CanCollide = v:GetAttribute("CanCollide") ~= false and not Value or false
+                        v.Color = Color
+                        if Mesh then
+                            Mesh.VertexColor = VertexColor
+                        end
+                        for i,SelectionBox:SelectionBox in v:QueryDescendants("> SelectionBox") do
+                            self:DefaultProperty(SelectionBox,"Color3")
+                            self:DefaultProperty(SelectionBox,"SurfaceColor3")
+                            SelectionBox.Color3 = Value and Color or SelectionBox:GetAttribute("Color3")
+                            SelectionBox.SurfaceColor3 = Value and Color or SelectionBox:GetAttribute("SurfaceColor3")
+                        end
+                        for i,v in NearbyDecorations do
+                            for i,v2 in v:QueryDescendants("Texture") do
+                                self:DefaultProperty(v2,"Color3")
+                                v2.Color3 = Value and Color3.new(0,0,0) or v2:GetAttribute("Color3")
                             end
-                            if v:GetAttribute("OriginalCanCollide") == nil then
-                                v:SetAttribute("OriginalCanCollide", v.CanCollide)
+                            for i,v2 in v:QueryDescendants("ParticleEmitter") do
+                                self:DefaultProperty(v2,"Color")
+                                local H,S,V = v2.Color.Keypoints[1].Value:ToHSV()
+                                v2.Color = (Value and ColorSequence.new(Color3.fromHSV(0.33, 1, V))) or v2:GetAttribute("Color")
                             end
-                            v.CanCollide = v:GetAttribute("OriginalCanCollide") ~= false and not Value or false
-                            if v:FindFirstChildOfClass("SpecialMesh") then
-                                if ShouldTween then
-                                    TweenService:Create(v:FindFirstChildOfClass("SpecialMesh"),MainTweenInfo,{VertexColor = VertexColor}):Play()
-                                else
-                                    v:FindFirstChildOfClass("SpecialMesh").VertexColor = VertexColor
-                                end
-                            end
-                            if KillerCollisions then
-                                local Params = OverlapParams.new()
-                                Params.FilterType = Enum.RaycastFilterType.Include
-                                Params.BruteForceAllSlow = true
-                                Params.FilterDescendantsInstances = {KillerCollisions}
-                                local Params2 = OverlapParams.new()
-                                Params2.FilterType = Enum.RaycastFilterType.Include
-                                Params2.BruteForceAllSlow = true
-                                Params2.FilterDescendantsInstances = {KillerDoorsFolder:QueryDescendants("#KillerWallDetail")}
-                                local Hitbox = workspace:GetPartBoundsInRadius(v.Position, 25, Params)
-                                local DecorationHitbox = workspace:GetPartBoundsInRadius(v.Position, 25, Params2)
-                                for i,v in Hitbox do
-                                    v.CanCollide = not Value
-                                end
-                                for i,v2 in DecorationHitbox do
-                                    local MainDecoration = v2:FindFirstAncestor("KillerWallDetail")
-                                    if not MainDecoration then continue end
-                                    local FloorSpikes = MainDecoration:FindFirstChildOfClass("MeshPart")
-                                    if ShouldTween then
-                                        TweenService:Create(FloorSpikes,MainTweenInfo,{Color = ColorBrightness(Color, 0.43)}):Play()
-                                    else
-                                        FloorSpikes.Color = ColorBrightness(Color, 0.43)
-                                    end
-                                    for i,v in FloorSpikes:QueryDescendants("Texture") do
-                                        if ShouldTween then
-                                            TweenService:Create(v,MainTweenInfo,{Color3 = Value and Color3.new(0,0,0) or Color3.new(1,1,1)}):Play()
-                                        else
-                                            v.Color3 = Value and Color3.new(0,0,0) or Color3.new(1,1,1)
-                                        end
-                                    end
-                                    local Effects = MainDecoration:QueryDescendants("ParticleEmitter")
-                                    for i,v in Effects do
-                                        if not v:GetAttribute("OGColor") then
-                                            v:SetAttribute("OGColor",v.Color)
-                                        end
-                                        v.Color = (Value and ColorSequence.new(Color)) or v:GetAttribute("OGColor")
-                                    end
-                                end
+                            if v:FindFirstChildOfClass("MeshPart") then
+                                self:DefaultProperty(v:FindFirstChildOfClass("MeshPart"),"Color")
+                                v:FindFirstChildOfClass("MeshPart").Color = Value and Color or v:FindFirstChildOfClass("MeshPart"):GetAttribute("Color")
                             end
                         end
                     end
@@ -749,47 +777,34 @@ local FeatureLoadout; FeatureLoadout = {
                 self:HandleDisableKillerWalls(Value)
             end,
             ["CharacterAdded"] = function(self)
+                LocalRoot.CanTouch = true
                 LocalRoot.Touched:Connect(function(Hit)
-                    if Hit and Hit.Parent and (Hit:FindFirstAncestor("KillerDoors") or Hit:FindFirstAncestor("Killer Doors")) then
-                        if GetValue("DisableKillerWalls") and Hit.CanQuery and (Hit:GetAttribute("WalkedThrough") ~= false or Hit:GetAttribute("WalkedThrough") == nil) then
-                            local KillerDoorsFolder = GameMap and (GameMap:FindFirstChild("KillerDoors",true) or GameMap:FindFirstChild("Killer Doors",true))
-                            if not KillerDoorsFolder then return end
-                            local Params = OverlapParams.new()
-                            Params.FilterType = Enum.RaycastFilterType.Include
-                            Params.BruteForceAllSlow = true
-                            Params.FilterDescendantsInstances = {KillerDoorsFolder}
-                            local Gates = workspace:GetPartBoundsInRadius(Hit.Position,15,Params)
-                            for i,v in Gates do
-                                if v:IsA("BasePart") then
-                                    v:SetAttribute("WalkedThrough","Ignore")
-                                end
-                            end
-                            Hit:SetAttribute("WalkedThrough","Ignore")
-                            task.delay(0.3,function()
-                                if Hit and Hit.Parent then
-                                    for i,v in Gates do
-                                        if v:IsA("BasePart") then
-                                            v:SetAttribute("WalkedThrough",true)
-                                        end
-                                    end
-                                    Hit:SetAttribute("WalkedThrough",true)
-                                    task.wait()
-                                    self:HandleDisableKillerWalls(GetValue("DisableKillerWalls"),true)
-                                end
-                            end)
-                            task.delay(4.5,function()
-                                if Hit and Hit.Parent then
-                                    for i,v in Gates do
-                                        if v:IsA("BasePart") then
-                                            v:SetAttribute("WalkedThrough",nil)
-                                        end
-                                    end
-                                    Hit:SetAttribute("WalkedThrough",nil)
-                                    task.wait()
-                                    self:HandleDisableKillerWalls(GetValue("DisableKillerWalls"),true)
-                                end
-                            end)
+                    if Hit and Hit.Parent and Hit.CollisionGroup == "Killers" and Hit:IsDescendantOf(GameMap) and Hit.Name:lower() ~= "inviisble" and Hit:GetAttribute("WalkedThrough") == nil and Hit.CanQuery and Hit.Parent.Name:upper() ~= "GENERATOR" and GetValue("DisableKillerWalls") then
+                        Hit:SetAttribute("WalkedThrough","Ignore")
+                        local NearbyWalls = self:GetNearbyWalls(Hit)
+                        for i,v in NearbyWalls do
+                            v:SetAttribute("WalkedThrough","Ignore")
                         end
+                        task.delay(0.3,function()
+                            if Hit and Hit.Parent then
+                                Hit:SetAttribute("WalkedThrough",true)
+                                for i,v in NearbyWalls do
+                                    v:SetAttribute("WalkedThrough",true)
+                                end
+                                task.wait()
+                                self:HandleDisableKillerWalls(GetValue("DisableKillerWalls"),true)
+                            end
+                        end)
+                        task.delay(4.5,function()
+                            if Hit and Hit.Parent then
+                                Hit:SetAttribute("WalkedThrough",nil)
+                                for i,v in NearbyWalls do
+                                    v:SetAttribute("WalkedThrough",nil)
+                                end
+                                task.wait()
+                                self:HandleDisableKillerWalls(GetValue("DisableKillerWalls"),true)
+                            end
+                        end)
                     end
                 end)
             end,
@@ -809,6 +824,7 @@ local FeatureLoadout; FeatureLoadout = {
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
+            ["Requirement"] = "Killer:JohnDoe",
             ["ScriptFunction"] = function(self, Value)
                 for i,v in InGame:GetChildren() do
                     if v:IsA("Folder") and (v.Name):find("JohnDoeTrail") then
@@ -821,6 +837,7 @@ local FeatureLoadout; FeatureLoadout = {
                 end
             end,
             ["CustomSetup"] = function(self)
+                --self.DisplayTitle = self.DisplayTitle:gsub("John Doe's",RichTextGradientColor("John Doe's",{Color3.fromRGB(255, 190, 71), Color3.fromRGB(168, 3, 0),Color3.fromRGB(184, 171, 255)}))
                 if InGame then
                     InGame.ChildAdded:Connect(function(Child)
                         if Child:IsA("Folder") and (Child.Name):find("JohnDoeTrail") then
@@ -850,6 +867,7 @@ local FeatureLoadout; FeatureLoadout = {
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
+            ["Requirement"] = "Killer:JohnDoe",
             ["ScriptFunction"] = function(self, Value)
                 for i,v in InGame:GetChildren() do
                     if v:IsA("Folder") and (v.Name):find("Shadows") then
@@ -870,6 +888,7 @@ local FeatureLoadout; FeatureLoadout = {
                 end
             end,
             ["CustomSetup"] = function(self)
+                --self.DisplayTitle = self.DisplayTitle:gsub("John Doe's",RichTextGradientColor("John Doe's",{Color3.fromRGB(255, 190, 71), Color3.fromRGB(168, 3, 0),Color3.fromRGB(184, 171, 255)}))
                 if InGame then
                     InGame.ChildAdded:Connect(function(Child)
                         if Child:IsA("Folder") and (Child.Name):find("Shadows") then
@@ -899,6 +918,7 @@ local FeatureLoadout; FeatureLoadout = {
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
+            ["Requirement"] = "Killer:JohnDoe",
             ["ScriptFunction"] = function(self, Value)
                 for i,v in InGame:GetChildren() do
                     if v.Name == "SpikeCollision" then
@@ -939,7 +959,7 @@ local FeatureLoadout; FeatureLoadout = {
                             if LocalHumanoid.FloorMaterial == Enum.Material.Air then 
                                 return
                             end
-                            if LocalCharacter.Parent ~= "Spectator" and new == Enum.HumanoidStateType.Jumping or new == Enum.HumanoidStateType.Freefall and LocalHumanoid.JumpPower > 0 and (GetValue("EnableJumping") or false) and not LocalHumanoid:GetAttribute("CDJump") then
+                            if not LocalCharacter.Parent.Name:lower():find("spectat") and new == Enum.HumanoidStateType.Jumping or new == Enum.HumanoidStateType.Freefall and LocalHumanoid.JumpPower > 0 and (GetValue("EnableJumping") or false) and not LocalHumanoid:GetAttribute("CDJump") then
                                 if not(GetValue("EnableJumping")) then
                                     Connection:Disconnect()
                                     LocalHumanoid.JumpPower = LocalHumanoid:GetAttribute("JumpingConnection") or 0
@@ -1062,11 +1082,16 @@ local FeatureLoadout; FeatureLoadout = {
                             if ValueInstance.Value < 1 then
                                 ValueInstance.Value = 1
                             end
-                        elseif ValueInstance.Value > 0.05 and ValueInstance.Value < 1 then
+                            ValueInstance:GetPropertyChangedSignal("Value"):Connect(function()
+                                if ValueInstance.Value < 1 then
+                                    ValueInstance.Value = 1
+                                end
+                            end)
+                        elseif ValueInstance.Value > 0.03 and ValueInstance.Value < 1 then
                             ValueInstance:Destroy()
                         else
                             ValueInstance:GetPropertyChangedSignal("Value"):Connect(function()
-                                if ValueInstance.Value > 0.05 and ValueInstance.Value < 1 then
+                                if ValueInstance.Value > 0.03 and ValueInstance.Value < 1 then
                                     ValueInstance:Destroy()
                                 end
                             end)
@@ -1083,15 +1108,12 @@ local FeatureLoadout; FeatureLoadout = {
                 end
             end,
             ["CharacterAdded"] = function(self)
-                if SpeedMultipliers ~= nil and typeof(SpeedMultipliers) == "Instance" then
+                if SpeedMultipliers ~= nil and SpeedMultipliers.Parent ~= nil and typeof(SpeedMultipliers) == "Instance" then
                     SpeedMultipliers.ChildAdded:Connect(function(Child)
                         if not Child:IsA("NumberValue") or Child.Name == "Sprinting" or Child.Name:lower() == "emoting" then
                             return
                         end
                         self:Check(Child)
-                        Child:GetPropertyChangedSignal("Value"):Connect(function()
-                            self:Check(Child)
-                        end)
                     end)
                 end
             end
@@ -1105,7 +1127,8 @@ local FeatureLoadout; FeatureLoadout = {
             ["DefaultInstanceValue"] = "Original",
             ["Requirement"] = "require",
             ["ExtraData"] = {
-                ["Options"] = "Original|Jason|Jason IV|Slasher|Slasher IV|c00lkidd|c00lkidd IV|c0llabk1dd|John Doe|JohnDoe IV|Noli|Noli IV|1x1x1x1|1x1x1x1 IV|Nosferatu|Azure|Dusekkar|Artful|Erlking|Herobrine|Sukuna|Retro|Mafioso|The Admin|Deceiver|The Pestilence|Celebration|P4rtyPwny|Alfred Drevis|Killer Kyle|Pursuer|TV TIME|c00lskeleton95|dragondudes3|Eye of The Abyss|White Pumpkin|Nerfed Demoman|Voidbound test|Sniper|Little Guy|Crouch|NPC Zombie|Default Roblox"
+                --["TemplateType"] = "Textbox", -- For testing animations
+                ["Options"] = "Original|Jason|Jason IV|Slasher|Slasher IV|c00lkidd|c00lkidd IV|c0llabk1dd|John Doe|JohnDoe IV|Noli|Noli IV|1x1x1x1|1x1x1x1 IV|Nosferatu|Azure|Dusekkar|Civilian|Artful|Harken|Erlking|Herobrine|Medic|Sukuna|Retro|Gluttony|Gatito|Lovecore|Treachstone|Screamer|PH0NK1DD|Mafioso|Krystal|Pest|The Admin|Deceiver|VIP|Monster|Friend|The Pestilence|Celebration|P4rtyPwny|Alfred Drevis|Killer Kyle|Pursuer|TV TIME|c00lskeleton95|dragondudes3|Heaven Executioner|Timeless|Eye of The Abyss|White Pumpkin|Nerfed Demoman|Voidbound test|Sniper|Little Guy|Crouch|NPC Zombie|Default Roblox"
             },
             ["ScriptFunction"] = function(self, Value, Starting)
                 if Starting then return end
@@ -1129,12 +1152,85 @@ local FeatureLoadout; FeatureLoadout = {
                         UpdateAnim(LocalHumanoid)
                     end
                 end
+            end,
+            ["CharacterAdded"] = function(self)
+                local SupportedOverrides = {"idle","walk","run"}
+                OverriddenAnimations = {}
+                if not LocalAnimator then return end
+                LastAnimOriginalUsed = LocalAnimator:GetPlayingAnimationTracks()[1]
+                LocalAnimator.AnimationPlayed:Connect(function(Track)
+                    if CanPlayOverrideAnim(LocalCharacter) and MainModule then
+                        local Override = Track.Animation:GetAttribute("Overriden")
+                        LastAnimOriginalUsed = not Override and Track or LastAnimOriginalUsed
+                        local AnimType,CharName = GetAnimationType(tonumber(Track.Animation.AnimationId:match("%d+")))
+                        if not Override then
+                            for i,v in SupportedOverrides do
+                                if AnimType and AnimType:lower():find(v:lower()) then
+                                    Track:Stop(0)
+                                elseif not AnimType and Track.Looped then
+                                    Track:Stop(0)
+                                end
+                            end
+                        end
+                        local FoundAction = false
+                        for i,v in LocalAnimator:GetPlayingAnimationTracks() do
+                            task.spawn(function()
+                                local AnimType,Char,Name = GetAnimationType(v.Animation.AnimationId)
+                                local IsSupported = false
+                                for i,v in SupportedOverrides do
+                                    if AnimType and AnimType:lower():find(v:lower()) then
+                                        IsSupported = true
+                                    end
+                                end
+                                if v.IsPlaying and not IsSupported and not v:GetAttribute("Ignored") then
+                                    FoundAction = v
+                                end
+                            end)
+                        end
+                        if FoundAction and Override then
+                            Track:Stop(0.2)
+                            task.wait(not FoundAction.Looped and FoundAction.Length * 0.95 or 0)
+                            if FoundAction.Looped then
+                                FoundAction.Stopped:Wait()
+                            end
+                            FoundAction:SetAttribute("Ignored",true)
+                            task.delay(0.2,function()
+                                FoundAction:SetAttribute("Ignored",nil)
+                            end)
+                            UpdateAnim(LocalHumanoid)
+                        end
+                    end
+                end)
+                local MoreThanZero = 0
+                LocalHumanoid:GetPropertyChangedSignal("MoveDirection"):Connect(function()
+                    if GetValue("AnimationChanger") ~= "Original" and MoreThanZero ~= (LocalHumanoid.MoveDirection.Magnitude == 0) then
+                        MoreThanZero = (LocalHumanoid.MoveDirection.Magnitude == 0)
+                        UpdateAnim(LocalHumanoid)
+                    end
+                end)
+                task.delay(0.05,UpdateAnim,LocalHumanoid)
+            end,
+            ["CustomSetup"] = function(self)
+                local function StartSprintDetection()
+                    repeat task.wait(0.1) until MainModule["__sprintedEvent"]
+                    MainModule["__sprintedEvent"].Event:Connect(function()
+                        if GetValue("AnimationChanger") ~= "Original" then
+                            UpdateAnim(LocalHumanoid)
+                        end
+                    end)
+                    MainModule["__sprintedEvent"].Destroying:Once(function()
+                        StartSprintDetection()
+                    end)
+                end
+                if MainModule then
+                    task.spawn(StartSprintDetection)
+                end
             end
         },
         ["ChangeInLobby"] = {
             ["DisplayDescription"] = "If it should change the animation in the lobby too",
             ["DisplayTitle"] = "Change In Lobby",
-            ["LayoutOrder"] = 11,
+            ["LayoutOrder"] = 12,
             ["Savable"] = false,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
@@ -1161,11 +1257,11 @@ local FeatureLoadout; FeatureLoadout = {
         ["NoliControl"] = {
             ["DisplayDescription"] = "Allows you to have better control of Void Rush Ability",
             ["DisplayTitle"] = "Better Void Rush",
-            ["LayoutOrder"] = 12,
+            ["LayoutOrder"] = 13,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
-            ["Requirement"] = "require",
+            ["Requirement"] = "Killer:Noli|require",
             ["ScriptFunction"] = function(self, Value, Starting)
                 if not Value and Starting then return end
                 if NoliConfig then
@@ -1210,13 +1306,17 @@ local FeatureLoadout; FeatureLoadout = {
         ["ControllableDash"] = {
             ["DisplayDescription"] = "Allows you to control where the dash goes just like Void Rush Ability",
             ["DisplayTitle"] = "Make Coolkidd's Dash Controllable",
-            ["LayoutOrder"] = 13,
+            ["LayoutOrder"] = 14,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
+            ["Requirement"] = "Killer:c00lkidd",
             ["DefaultInstanceValue"] = false,
+            ["ExtraData"] = {
+                ["Responsiveness"] = 100,
+            },
             ["CharacterAdded"] = function(self)
-                LocalRoot.ChildAdded:Connect(function(Child)
-                    if Child:IsA("LinearVelocity") and LocalHumanoid then
+                LocalRoot.ChildAdded:Connect(function(Child:LinearVelocity?)
+                    if Child:IsA("LinearVelocity") and LocalHumanoid and LocalCharacter.Parent.Name:lower():find("killer") and LocalCharacter.Name:lower():find("lkid") then
                         local OriginalVelocity = Child.LineDirection
                         local OriginalVelocityMag = Child.LineDirection.Magnitude
                         for i,v in SpeedMultipliers:GetChildren() do
@@ -1224,14 +1324,14 @@ local FeatureLoadout; FeatureLoadout = {
                                 v.Value = 0.005
                             end
                         end
-                        local function UpdateVelocity()
+                        local function UpdateVelocity(Start)
                             if GetValue("ControllableDash") and (LocalCharacter.Name:gsub("0","O"):lower():find("coolkid")) and LocalHumanoid.MoveDirection ~= Vector3.zero then
-                                Child.LineDirection = LocalHumanoid.MoveDirection * OriginalVelocityMag
+                                Child.LineDirection = Child.LineDirection:Lerp(LocalHumanoid.MoveDirection * OriginalVelocityMag,self.Instance:GetAttribute("Responsiveness")/1000)
                             elseif GetValue("ControllableDash") and (LocalCharacter.Name:gsub("0","O"):lower():find("coolkid")) and workspace.CurrentCamera then
                                 local CameraDirection = Vector3.new(workspace.CurrentCamera.CFrame.LookVector.X, 0, workspace.CurrentCamera.CFrame.LookVector.Z)
-                                Child.LineDirection = CameraDirection.Unit * OriginalVelocityMag
-                                if Child.LineVelocity > 0 then
-                                    LocalRoot.CFrame = LocalRoot.CFrame:Lerp(CFrame.lookAt(LocalRoot.Position, LocalRoot.Position + CameraDirection),0.05)
+                                Child.LineDirection = Child.LineDirection:Lerp(CameraDirection.Unit * OriginalVelocityMag,self.Instance:GetAttribute("Responsiveness")/1000)
+                                if Child.LineVelocity > 0 or Start then
+                                    LocalRoot.CFrame = LocalRoot.CFrame:Lerp(CFrame.lookAt(LocalRoot.Position, LocalRoot.Position + CameraDirection),Start and 1 or 0.05)
                                 end
                             else
                                 Child.LineDirection = OriginalVelocity
@@ -1256,11 +1356,12 @@ local FeatureLoadout; FeatureLoadout = {
         },
         ["AutoBlock"] = {
             ["DisplayDescription"] = "Uses the block ability automatically when about to get hit (REQUIRES GOOD PING)",
-            ["DisplayTitle"] = "Guest1337 Auto Block",
-            ["LayoutOrder"] = 14,
+            ["DisplayTitle"] = '<stroke thickness="0.7">Guest1337</stroke> Auto Block',
+            ["LayoutOrder"] = 15,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
+            ["Requirement"] = "Survivor:Guest1337|require",
             ["ScriptFunction"] = function(self, Value)
                 local BlockAbilityUI = MainUI and MainUI:FindFirstChild("AbilityContainer") and MainUI:FindFirstChild("AbilityContainer"):FindFirstChild("Block")
                 local AutoImage = BlockAbilityUI and BlockAbilityUI:FindFirstChild("AutoImage")
@@ -1271,7 +1372,7 @@ local FeatureLoadout; FeatureLoadout = {
                 end
             end,
             ["HandleKiller"] = function(self,Killer)
-                local BlockableAttacks = {"slash","enragedslash","stab","attack","punch","swing","golemslash"}
+                local BlockableAttacks = {"slash","enragedslash","stab","attack","punch",--[["behead",]]"swing","golemslash"}
                 local CustomHitboxes = {
                     ["golemslash"] = {
                         Size = Vector3.new(6, 2, 7),
@@ -1345,7 +1446,7 @@ local FeatureLoadout; FeatureLoadout = {
                 end
             end,
             ["CustomSetup"] = function(self)
-                self.DisplayTitle = self.DisplayTitle:gsub("Guest1337",RichTextGradientColor("Guest1337",{Color3.fromRGB(30, 30, 30), Color3.fromRGB(80, 80, 80)}))
+                self.DisplayTitle = self.DisplayTitle:gsub("Guest1337",RichTextGradientColor("Guest1337",{Color3.fromRGB(16, 47, 185), Color3.fromRGB(146, 202, 93)}))
                 if MainUI:FindFirstChild("AbilityContainer") then
                     self:SetupUI(MainUI:FindFirstChild("AbilityContainer"))
                 end
@@ -1360,15 +1461,19 @@ local FeatureLoadout; FeatureLoadout = {
         },
         ["AutoPunch"] = {
             ["DisplayDescription"] = "Uses the punch ability when you block successfully",
-            ["DisplayTitle"] = "Guest1337 Auto Punch",
-            ["LayoutOrder"] = 15,
+            ["DisplayTitle"] = '<stroke thickness="0.7">Guest1337</stroke> Auto Punch',
+            ["LayoutOrder"] = 16,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
+            ["Requirement"] = "Survivor:Guest1337",
+            ["ExtraData"] = {
+                ["Accuracy"] = 80
+            },
             ["ScriptFunction"] = function(self, Value)
                 local BlockAbilityUI = MainUI and MainUI:FindFirstChild("AbilityContainer") and MainUI:FindFirstChild("AbilityContainer"):FindFirstChild("Punch")
                 local AutoImage = BlockAbilityUI and BlockAbilityUI:FindFirstChild("AutoImage")
-                if Value and AutoImage then
+                if Value and AutoImage and LocalCharacter.Name:lower():find("guest") then
                     AutoImage.Visible = true
                 elseif AutoImage then
                     AutoImage.Visible = false
@@ -1386,15 +1491,15 @@ local FeatureLoadout; FeatureLoadout = {
                         AutoImage.Size = UDim2.fromScale(0.8,0.8)
                         AutoImage.Position = UDim2.fromScale(0.5,0)
                         AutoImage.AnchorPoint = Vector2.new(0.5,0.4)
-                        AutoImage.Visible = GetValue("AutoPunch") and LocalCharacter.Parent.Name:find("Survi")
+                        AutoImage.Visible = GetValue("AutoPunch") and LocalCharacter.Parent.Name:find("Survi") and LocalCharacter.Name:lower():find("guest")
                     end
                 end
             end,
-            ["GetClosestKiller"] = function()
-                local Distance = 55
+            ["GetClosestKiller"] = function(self,Distance)
+                Distance = Distance or 55
                 local SelectedKiller
                 for i,v in KillersFolder:GetChildren() do
-                    if Players:GetPlayerFromCharacter(v) and LocalRoot and v:FindFirstChild("HumanoidRootPart") and (v:FindFirstChild("HumanoidRootPart").Position - LocalRoot.Position).Magnitude < Distance then
+                    if Players:GetPlayerFromCharacter(v) and LocalRoot and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChildOfClass("Humanoid") and v:FindFirstChildOfClass("Humanoid").Health > 0 and (v:FindFirstChild("HumanoidRootPart").Position - LocalRoot.Position).Magnitude < Distance then
                         Distance = (v:FindFirstChild("HumanoidRootPart").Position - LocalRoot.Position).Magnitude
                         SelectedKiller = v
                     end
@@ -1419,6 +1524,7 @@ local FeatureLoadout; FeatureLoadout = {
                                 UseActorAbility:FireServer("UseActorAbility",{"Punch"})
                             end
                         end
+                        local Timeout = workspace.DistributedGameTime + 1.25
                         local CameraTarget 
                         local SelectedVelocity
                         CameraTarget = RunService.RenderStepped:Connect(function()
@@ -1432,13 +1538,13 @@ local FeatureLoadout; FeatureLoadout = {
                                 LocalRoot.Velocity = TargetCFrame.LookVector * 32
                                 SelectedVelocity = LocalRoot.Velocity
                             else
-                                SelectedVelocity = LocalRoot.Velocity:Lerp(SelectedVelocity or LocalRoot.Velocity,0.8)
+                                SelectedVelocity = LocalRoot.Velocity:Lerp(SelectedVelocity or LocalRoot.Velocity,GetValue("AutoPunch",true):GetAttribute("Accuracy")/100)
                                 LocalRoot.Velocity = SelectedVelocity
                             end
                         end)
                         repeat
                             task.wait(0.1)
-                        until FOVMultipliers:FindFirstChild("HitRegistered") or not SpeedMultipliers:FindFirstChild("PunchAbility")
+                        until FOVMultipliers:FindFirstChild("HitRegistered") or not SpeedMultipliers:FindFirstChild("PunchAbility") or workspace.DistributedGameTime > Timeout
                         CameraTarget:Disconnect()
                         task.wait(0.2)
                         LocalCharacter:SetAttribute("DisableShiftLockMovement",false)
@@ -1446,7 +1552,7 @@ local FeatureLoadout; FeatureLoadout = {
                 end)
             end,
             ["CustomSetup"] = function(self)
-                self.DisplayTitle = self.DisplayTitle:gsub("Guest1337",RichTextGradientColor("Guest1337",{Color3.fromRGB(30, 30, 30), Color3.fromRGB(80, 80, 80)}))
+                self.DisplayTitle = self.DisplayTitle:gsub("Guest1337",RichTextGradientColor("Guest1337",{Color3.fromRGB(16, 47, 185), Color3.fromRGB(146, 202, 93)}))
                 if MainUI:FindFirstChild("AbilityContainer") then
                     self:SetupUI(MainUI:FindFirstChild("AbilityContainer"))
                 end
@@ -1456,7 +1562,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["EnableOverride"] = {
             ["DisplayDescription"] = "Overrides the puzzle grid size of the generators",
             ["DisplayTitle"] = "Override Generator(s) Grid Size",
-            ["LayoutOrder"] = 16,
+            ["LayoutOrder"] = 17,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
@@ -1465,7 +1571,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["GridSize"] = {
             ["DisplayDescription"] = "The Size to override for the Generator's Puzzle",
             ["DisplayTitle"] = "Generator(s) Grid Size",
-            ["LayoutOrder"] = 17,
+            ["LayoutOrder"] = 18,
             ["Savable"] = true,
             ["InstanceType"] = "NumberValue",
             ["DefaultInstanceValue"] = 6,
@@ -1705,6 +1811,185 @@ local FeatureLoadout; FeatureLoadout = {
                 end
             end
         },
+        ["AutoHatchet"] = {
+            ["DisplayDescription"] = "Uses the hatchet ability when a killer is near you",
+            ["DisplayTitle"] = '<stroke thickness="0.7">Jane Doe</stroke> Auto Hatchet',
+            ["LayoutOrder"] = 19,
+            ["Savable"] = true,
+            ["InstanceType"] = "BoolValue",
+            ["DefaultInstanceValue"] = false,
+            ["Requirement"] = "Survivor:JaneDoe",
+            ["Levels"] = ReplicatedStorage:FindFirstChild("Resonance",true) and ReplicatedStorage:FindFirstChild("Resonance",true):FindFirstChild("ParticleHolder",true),
+            ["AbilityNames"] = {"Hatchet","Axe"},
+            ["ExtraData"] = {
+                ["Accuracy"] = 80,
+                ["Range"] = 13
+            },
+            ["ScriptFunction"] = function(self, Value)
+                local BlockAbilityUI = MainUI and MainUI:FindFirstChild("AbilityContainer")
+                if not BlockAbilityUI then return end
+                for i,v in BlockAbilityUI:GetChildren() do
+                    if table.find(self.AbilityNames,v.Name) then
+                       BlockAbilityUI = v
+                    end
+                end
+                local AutoImage = BlockAbilityUI and BlockAbilityUI:FindFirstChild("AutoImage")
+                if Value and AutoImage and LocalCharacter.Name:lower():find("jane") then
+                    AutoImage.Visible = true
+                elseif AutoImage then
+                    AutoImage.Visible = false
+                end
+            end,
+            ["SetupUI"] = function(self,AbilityContainer)
+                if AbilityContainer.Name == "AbilityContainer" then
+                    local Found
+                    for i,v in AbilityContainer:GetChildren() do
+                        if table.find(self.AbilityNames,v.Name) then
+                            Found = v
+                        end
+                    end
+                    if Found and not Found:FindFirstChild("AutoImage") then
+                        local AutoImage = Instance.new("ImageLabel")
+                        AutoImage.Name = "AutoImage"
+                        AutoImage.Interactable = false
+                        AutoImage.Parent = Found
+                        AutoImage.Image = "rbxassetid://114159864966636"
+                        AutoImage.BackgroundTransparency = 1
+                        AutoImage.Size = UDim2.fromScale(0.8,0.8)
+                        AutoImage.Position = UDim2.fromScale(0.5,0)
+                        AutoImage.AnchorPoint = Vector2.new(0.5,0.4)
+                        AutoImage.Visible = GetValue("AutoHatchet") and LocalCharacter.Parent.Name:find("Survi") and LocalCharacter.Name:lower():find("jane")
+                    end
+                end
+            end,
+            ["GetCharacterLevel"] = function(self, Character)
+                if not Character then return 0 end
+                local Humanoid = Character:FindFirstChildOfClass("Humanoid")
+                local RootPart = Character:FindFirstChild("HumanoidRootPart") or Humanoid and Humanoid.RootPart
+                if not RootPart or not self.Levels then return 0 end
+                local Level = 0
+                for i, Attachment in self.Levels:GetChildren() do
+                    if Attachment:IsA("Attachment") then
+                        local Number = tonumber(Attachment.Name:match("%d+"))
+                        if Number and Number > Level then
+                            local Matches = true
+                            for i2, Effect in Attachment:GetChildren() do
+                                if not RootPart:FindFirstChild(Effect.Name) then
+                                    Matches = false
+                                    break
+                                end
+                            end
+                            if Matches then
+                                Level = Number
+                            end
+                        end
+                    end
+                end
+                return Level
+            end,
+            ["GetClosestKiller"] = function(self,Distance)
+                Distance = Distance or 55
+                local SelectedKiller
+                for i,v in KillersFolder:GetChildren() do
+                    if Players:GetPlayerFromCharacter(v) and LocalRoot and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChildOfClass("Humanoid") and v:FindFirstChildOfClass("Humanoid").Health > 0 and (v:FindFirstChild("HumanoidRootPart").Position - LocalRoot.Position).Magnitude < Distance then
+                        Distance = (v:FindFirstChild("HumanoidRootPart").Position - LocalRoot.Position).Magnitude
+                        SelectedKiller = v
+                    end
+                end
+                return SelectedKiller,Distance
+            end,
+            ["OnLoop"] = function(self)
+                local FireSignal = GetFunction(firesignal,FireSignal)
+                local UseActorAbility = Network and Network:FindFirstChildOfClass("RemoteEvent")
+                local AbilityContainer = MainUI and MainUI:FindFirstChild("AbilityContainer")
+                local Ability
+                if not AbilityContainer then return end
+                for i,v in AbilityContainer:GetChildren() do
+                    if table.find(self.AbilityNames,v.Name) then
+                        Ability = v
+                    end
+                end
+                if not LocalHumanoid or not LocalCharacter or LocalCharacter:GetAttribute("DisableShiftLockMovement") or LocalCharacter:GetAttribute("DoingActionPower") or not Ability or not Ability:FindFirstChild("Clipping") or Ability:FindFirstChild("Clipping").Visible == false or Ability:FindFirstChild("Clipping").Size.Y.Scale ~= 1 then return end
+                if GetValue("AutoHatchet") and (self:GetClosestKiller(GetValue("AutoHatchet",true):GetAttribute("Range"))) and self:GetCharacterLevel(self:GetClosestKiller()) >= GetValue("AutoHatchetLevel") and self:GetClosestKiller():FindFirstChild("HumanoidRootPart") and not self:GetClosestKiller():FindFirstChild("HumanoidRootPart"):FindFirstChild("InvincibleFX") then
+                    LocalCharacter:SetAttribute("DoingActionPower",true)
+                    if FireSignal and Ability then
+                        FireSignal(Ability.MouseButton1Click)
+                    else
+                        if GetValue("OfficialGame") then
+                            for i,v in self.AbilityNames do
+                                UseActorAbility:FireServer("UseActorAbility",{v})
+                            end
+                        else
+                            for i,v in self.AbilityNames do
+                                UseActorAbility:FireServer("UseActorAbility",v)
+                                UseActorAbility:FireServer("UseActorAbility",{v})
+                            end
+                        end
+                    end
+                    local CameraTarget 
+                    local SelectedVelocity
+                    CameraTarget = RunService.RenderStepped:Connect(function()
+                        local ClosestKiller,Dis = self:GetClosestKiller()
+                        if not ClosestKiller or not ClosestKiller:FindFirstChild("HumanoidRootPart") then return end
+                        local KillerRootPos = ClosestKiller:FindFirstChild("HumanoidRootPart").Position
+                        local SelectedPosition = Vector3.new(KillerRootPos.X,LocalRoot.Position.Y,KillerRootPos.Z)
+                        local TargetCFrame = CFrame.new(LocalRoot.Position, SelectedPosition)
+                        LocalCharacter:SetPrimaryPartCFrame(TargetCFrame)
+                        if not SelectedVelocity and LocalCharacter:GetAttribute("DisableShiftLockMovement") then
+                            LocalRoot.Velocity = TargetCFrame.LookVector * 45
+                            SelectedVelocity = LocalRoot.Velocity
+                        elseif LocalCharacter:GetAttribute("DisableShiftLockMovement") then
+                            SelectedVelocity = LocalRoot.Velocity:Lerp(SelectedVelocity or LocalRoot.Velocity,GetValue("AutoHatchet",true):GetAttribute("Accuracy")/100)
+                            LocalRoot.Velocity = SelectedVelocity
+                        end
+                    end)
+                    local Timeout = workspace.DistributedGameTime + 1
+                    task.wait(0.6)
+                    LocalCharacter:SetAttribute("DisableShiftLockMovement",true)
+                    repeat
+                        task.wait(0.05)
+                    until FOVMultipliers:FindFirstChild("HitRegistered") or workspace.DistributedGameTime > Timeout
+                    LocalRoot.Velocity = LocalRoot.Velocity * 0.15
+                    CameraTarget:Disconnect()
+                    task.wait(0.1)
+                    LocalCharacter:SetAttribute("DisableShiftLockMovement",false)
+                    task.wait(1.6)
+                    LocalCharacter:SetAttribute("DoingActionPower",nil)
+                end
+            end,
+            ["CustomSetup"] = function(self)
+                self.DisplayTitle = self.DisplayTitle:gsub("Jane Doe",RichTextGradientColor("Jane Doe",{Color3.fromRGB(196, 171, 126),Color3.fromRGB(156, 107, 46),Color3.fromRGB(185, 96, 214)}))
+                if MainUI:FindFirstChild("AbilityContainer") then
+                    self:SetupUI(MainUI:FindFirstChild("AbilityContainer"))
+                end
+                MainUI.ChildAdded:Connect(function(Child)
+                    self:SetupUI(Child)
+                end)
+            end
+        },
+        ["AutoHatchetLevel"] = {
+            ["DisplayDescription"] = "The threshold that triggers auto hatchet",
+            ["DisplayTitle"] = "Auto Hatchet Level Threshold",
+            ["LayoutOrder"] = 20,
+            ["Savable"] = true,
+            ["InstanceType"] = "NumberValue",
+            ["DefaultInstanceValue"] = 2,
+            ["Requirement"] = "Survivor:JaneDoe|AutoHatchet",
+            ["ExtraData"] = {
+                ["MaxValue"] = 3,
+                ["MinValue"] = 0,
+                ["Step"] = 1,
+            },
+            ["Levels"] = ReplicatedStorage:FindFirstChild("Resonance",true) and ReplicatedStorage:FindFirstChild("Resonance",true):FindFirstChild("ParticleHolder",true),
+            ["CustomSetup"] = function(self)
+                if self.Levels then
+                    local AmountOfLevels = #self.Levels:QueryDescendants("Attachment")
+                    self.Instance:SetAttribute("MaxValue",AmountOfLevels)
+                    self.DefaultInstanceValue = AmountOfLevels - 1
+                    self.Instance.Value = math.clamp(self.Instance.Value,0,AmountOfLevels)
+                end
+            end
+        },
     },
     ["Visuals"] = {
         ["TabAttributes"] = {
@@ -1718,6 +2003,7 @@ local FeatureLoadout; FeatureLoadout = {
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
+            ["Requirement"] = "Killer:Noli",
             ["HandleNoliNPC"] = function(self,Value)
                 if Value then
                     for i,v in KillersFolder:GetChildren() do
@@ -1757,10 +2043,11 @@ local FeatureLoadout; FeatureLoadout = {
         ["Disable007n7NPC"] = {
             ["DisplayDescription"] = "Disables 007n7's Distracting NPC",
             ["DisplayTitle"] = "Disable 007n7's NPC",
-            ["LayoutOrder"] = 1,
+            ["LayoutOrder"] = 2,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
+            ["Requirement"] = "Survivor:007n7",
             ["Handle007n7NPC"] = function(self,Value)
                 if Value then
                     for i,v in InGame:GetChildren() do
@@ -1795,10 +2082,63 @@ local FeatureLoadout; FeatureLoadout = {
                 end
             end
         },
+        ["DisplayCorrectTime"] = {
+            ["DisplayDescription"] = "Prevent's Noli's fake timer and always shows the timer",
+            ["DisplayTitle"] = "Always Display Correct Timer",
+            ["LayoutOrder"] = 3,
+            ["Savable"] = true,
+            ["InstanceType"] = "BoolValue",
+            ["DefaultInstanceValue"] = false,
+            ["ScriptFunction"] = function(self,Value,Starting)
+                if self.TimerUI and not Starting then
+                    if Value then
+                        self.TimerUI:SetAttribute("Self",true)
+                    end
+                    self.TimerUI.Text = Value and self:FormatSeconds(self.TimerValue:GetAttribute("TimeLeft")) or self.TimerUI:GetAttribute("Original") or ""
+                end
+            end,
+            ["FormatSeconds"] = function(self,Number)
+                if not Number or type(Number) ~= type(0) then return "0:00" end
+                local Minutes = math.floor(Number%3600/60)
+                local Seconds = math.floor(Number%60)
+                return string.format("%d:%02d",Minutes,Seconds)
+            end,
+            ["CustomSetup"] = function(self)
+                local TimerValue = ReplicatedStorage:FindFirstChild("RoundTimer")
+                local TimerUI = PlayerGui:FindFirstChild("RoundTimer") and PlayerGui:FindFirstChild("RoundTimer"):FindFirstChild("Time",true)
+                if not (TimerValue and TimerUI) then
+                    self.Requirement = true
+                    return
+                end
+                self.TimerUI = TimerUI
+                self.TimerValue = TimerValue
+                TimerUI:SetAttribute("Original",TimerUI.Text)
+                TimerUI:GetPropertyChangedSignal("Text"):Connect(function()
+                    if TimerUI:GetAttribute("Self") then
+                        TimerUI:SetAttribute("Self",nil)
+                    else
+                        TimerUI:SetAttribute("Original",TimerUI.Text)
+                    end
+                    if GetValue("DisplayCorrectTime") then
+                        TimerUI.Text = self:FormatSeconds(TimerValue:GetAttribute("TimeLeft"))
+                    end
+                end)
+                TimerValue:GetAttributeChangedSignal("TimeLeft"):Connect(function()
+                    if GetValue("DisplayCorrectTime") then
+                        TimerUI:SetAttribute("Self",true)
+                        TimerUI.Text = self:FormatSeconds(TimerValue:GetAttribute("TimeLeft"))
+                    end
+                end)
+                if self.Instance.Value then
+                    TimerUI:SetAttribute("Self",true)
+                    TimerUI.Text = self:FormatSeconds(TimerValue:GetAttribute("TimeLeft"))
+                end
+            end
+        },
         ["ESP"] = {
             ["DisplayDescription"] = "Track things in the game through walls",
             ["DisplayTitle"] = "ESP",
-            ["LayoutOrder"] = 2,
+            ["LayoutOrder"] = 6,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
@@ -1808,7 +2148,7 @@ local FeatureLoadout; FeatureLoadout = {
                 local Distance = (Camera.CFrame.Position - TargetRoot.Position).Magnitude
                 local MinDistance = Settings.MinDistance
                 local ShouldHide = Distance < MinDistance or Distance > 1200
-                if ShouldHide and Highlight.FillTransparency ~= 1 then
+                if ShouldHide and Highlight.OutlineTransparency ~= 1 then
                     local Tween = TweenService:Create(Highlight,TweenInfo.new(Settings.Instant and 0 or 0.1),{
                         FillTransparency = 1,
                         OutlineTransparency = 1
@@ -1851,6 +2191,7 @@ local FeatureLoadout; FeatureLoadout = {
             ["CreateDynamicHighlight"] = function(self,Enabled,ItemInstance,TargetRoot,Settings)
                 Settings = type(Settings) == "table" and Settings or {["MaxDistance"] = 100,["MinDistance"] = 10,["Color"] = Color3.new(1,1,1)}
                 local Highlight:Highlight? = ItemInstance:QueryDescendants("Highlight[$Dynamic]")
+                local ExistingHighlights = ItemInstance:QueryDescendants("Highlight#PlayerAura")
                 if Enabled and GetValue("ESP") then
                     if not Highlight[1] then
                         Highlight = Instance.new("Highlight")
@@ -1889,7 +2230,13 @@ local FeatureLoadout; FeatureLoadout = {
                         Highlight.OutlineColor = Color3.fromHSV(H, S, V * 1.1)
                         self:CheckHighlightDistance(Highlight, TargetRoot, Settings)
                     end
+                    for i,v in ExistingHighlights do
+                        v.Enabled = false
+                    end
                 elseif Highlight[1] then
+                    for i,v in ExistingHighlights do
+                        v.Enabled = true
+                    end
                     Highlight[1]:Destroy()
                 end
             end,
@@ -1903,9 +2250,9 @@ local FeatureLoadout; FeatureLoadout = {
                         BillboardGui.Name = HttpService:GenerateGUID(false):sub(1,7)
                         BillboardGui.Archivable = false
                         BillboardGui.Size = ItemInstance:IsA("Tool") and UDim2.new(1.5, 30, 0.75, 30) or UDim2.new(1.5,60,0.75,25)
-                        BillboardGui["StudsOffset" .. (ItemInstance:IsA("Tool") and "WorldSpace" or "")] = ItemInstance:IsA("Tool") and Vector3.new(0,3,0) or Vector3.new(0,4,0)
+                        BillboardGui["StudsOffset"] = Settings.Size or ItemInstance:IsA("Tool") and Vector3.new(0,3,0) or Vector3.new(0,4,0)
                         BillboardGui.AlwaysOnTop = true
-                        BillboardGui.ResetOnSpawn = false
+                        BillboardGui.ResetOnSpawn = true
                         BillboardGui.Adornee = TargetRoot
                         BillboardGui:SetAttribute("Dynamic",true)
                         TextLabel.Text = Settings.Text or "Unknown"
@@ -1914,9 +2261,17 @@ local FeatureLoadout; FeatureLoadout = {
                         TextLabel.AnchorPoint = Vector2.new(0.5,0.5)
                         TextLabel.Position = UDim2.fromScale(0.5,0.5)
                         TextLabel.Size = UDim2.fromScale(1,1)
+                        TextLabel.TextWrapped = false
                         TextLabel.BackgroundTransparency = 1
-                        TextLabel.TextScaled = true
+                        TextLabel.TextStrokeTransparency = 0
+                        TextLabel.TextSize = 10
                         TextLabel.Parent = BillboardGui
+                        BillboardGui:GetPropertyChangedSignal("Size"):Connect(function()
+                            BillboardGui.Size = ItemInstance:IsA("Tool") and UDim2.new(1.5, 30, 0.75, 30) or UDim2.new(1.5,60,0.75,25)
+                        end)
+                        BillboardGui:GetPropertyChangedSignal("StudsOffset"):Connect(function()
+                            BillboardGui["StudsOffset"] = Settings.Size or ItemInstance:IsA("Tool") and Vector3.new(0,3,0) or Vector3.new(0,4,0)
+                        end)
                         BillboardGui.Parent = TargetRoot
                         self:CheckTextDistance(TextLabel,TargetRoot,Settings)
                         local Connection;Connection = workspace.CurrentCamera:GetPropertyChangedSignal("CameraSubject"):Connect(function()
@@ -1948,9 +2303,7 @@ local FeatureLoadout; FeatureLoadout = {
                 end
             end,
             ["OnLoop"] = function(self)
-                local fireprompt = fireproximitypromptFunction and function(ProximityPrompt)
-                    return ProximityPrompt and fireproximitypromptFunction(ProximityPrompt)
-                end or function(ProximityPrompt)
+                local fireprompt = fireproximityprompt or function(ProximityPrompt)
                     if ProximityPrompt then
                         ProximityPrompt:InputHoldBegin();ProximityPrompt:InputHoldEnd()
                     end
@@ -1969,20 +2322,53 @@ local FeatureLoadout; FeatureLoadout = {
                         end
                     end)
                 end
+                if InGame then
+                    local ModelData = {
+                        ["VineModel"] = {"Vine",ColorPresets["Purple"]},
+                        ["GroundBulbModel"] = {"Bulb",ColorPresets["Purple"]},
+                        ["SubspaceTripmine"] = {"Mine",ColorPresets["Orange"]},
+                        ["PizzaDeliveryRig"] = {"NPC",ColorPresets["Orange"]},
+                        ["TaphTripwire"] = {"Wire",ColorPresets["Light Green"]},
+                        ["BuildermanDispenser"] = {"Dispenser",ColorPresets["Light Green"]},
+                        ["BuildermanSentry"] = {"Sentry",ColorPresets["Red"]},
+                        ["Document"] = {"Contract",ColorPresets["Red"]}
+                    }
+                    for i,v in InGame:QueryDescendants("#VineModel,#GroundBulbModel,#SubspaceTripmine,#BuildermanDispenser,#PizzaDeliveryRig:has(Humanoid),#BuildermanSentry,Model:has(BasePart#Wire)") do
+                        task.spawn(function()
+                            local FoundMatch
+                            for i2,v2 in ModelData do
+                                if v.Name:lower():find(i2:lower()) then
+                                    FoundMatch = v2
+                                    break
+                                end
+                            end
+                            local FeatureValue, ColorValue, TargetRoot = GetValue("OtherESP"), FoundMatch and FoundMatch[2] or ColorPresets["White"], v:IsA("Model") and v.PrimaryPart or v:FindFirstChild("RootPart") or v:FindFirstChildWhichIsA("BasePart")
+                            self:CreateDynamicHighlight(FeatureValue, v, TargetRoot, {MaxDistance = 100,MinDistance = 12,Color = ColorValue})
+                            self:CreateText(FeatureValue, v, TargetRoot, {MinDistance = 25,Text = FoundMatch and FoundMatch[1] or v.Name, Color = FoundMatch and FoundMatch[2] or ColorValue})
+                        end)
+                    end
+                    for i,v in workspace:GetChildren() do
+                        if v:IsA("MeshPart") and v:FindFirstChild("Moving Outward Burst") then
+                            local FeatureValue, ColorValue, TargetRoot = GetValue("OtherESP"), ModelData["Document"] and ModelData["Document"][2] or ColorPresets["White"], v
+                            self:CreateDynamicHighlight(FeatureValue and not v:GetAttribute("Team") or v:GetAttribute("Team") ~= LocalCharacter.Parent.Name, v, TargetRoot, {MaxDistance = 100,MinDistance = 12,Color = ColorValue})
+                            self:CreateText(FeatureValue, v, TargetRoot, {MinDistance = 25,Text = ModelData["Document"] and ModelData["Document"][1] or v.Name, Color = ColorValue})
+                        end
+                    end
+                end
                 if InGame and GameMap then
                     task.spawn(function()
-                        local Tools = InGame:QueryDescendants("#Map > Tool")
-                        local DroppedTools = InGame.Parent:QueryDescendants("Folder > Tool")
-                        for i,v in table.move(Tools,1,#Tools,#DroppedTools+1,DroppedTools) do
+                        local Tools = InGame:QueryDescendants("Tool")
+                        for i,v in Tools do
+                            if v.Parent:IsA("Model") and v.Parent:FindFirstChildOfClass("Humanoid") then continue end
                             local FeatureValue, ColorValue, TargetRoot = GetValue("ItemsESP"), ColorPresets[GetValue("ItemsColor")], v:FindFirstChildWhichIsA("BasePart")
                             self:CreateDynamicHighlight(FeatureValue, v, TargetRoot, {MaxDistance = 100,MinDistance = 12,Color = ColorValue})
-                            self:CreateText(FeatureValue, v, TargetRoot, {MinDistance = 25,Text = v.Name, Color = ColorValue})
-                            if v:IsA("Tool") and not LocalCharacter:FindFirstChild(v.Name) and not LocalPlayer:FindFirstChildOfClass("Backpack"):FindFirstChild(v.Name) and not v:GetAttribute("JustDropped") and GetValue("AutoPickup") then
+                            self:CreateText(FeatureValue, v, TargetRoot, {MinDistance = 25,Text = v:FindFirstChildWhichIsA("ProximityPrompt",true) and v:FindFirstChildWhichIsA("ProximityPrompt",true).ActionText or v.Name, Color = ColorValue})
+                            if (not LocalCharacter:FindFirstChildOfClass("Tool") or LocalCharacter:FindFirstChildOfClass("Tool").Name ~= v.Name) and not LocalPlayer:FindFirstChildOfClass("Backpack"):FindFirstChild(v.Name) and not v:GetAttribute("JustDropped") and GetValue("AutoPickup") then
                                 local Param = OverlapParams.new()
-                                Param.FilterType = Enum.RaycastFilterType.Include
-                                Param.FilterDescendantsInstances = {v}
+                                Param.BruteForceAllSlow = true
+                                Param.IncludeInstances = {v}
                                 local Result = workspace:GetPartBoundsInRadius(LocalRoot.Position, 4.5, Param)
-                                if LocalRoot and #Result > 0 then
+                                if LocalRoot and #Result > 0 and v:FindFirstChildWhichIsA("ProximityPrompt",true) then
                                     fireprompt(v:FindFirstChildWhichIsA("ProximityPrompt",true))
                                 end
                             end
@@ -2006,7 +2392,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["ShowText"] = {
             ["DisplayDescription"] = "Show text over the highlighted objects",
             ["DisplayTitle"] = "Show Text",
-            ["LayoutOrder"] = 3,
+            ["LayoutOrder"] = 7,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
@@ -2015,7 +2401,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["KillersESP"] = {
             ["DisplayDescription"] = "Enables ESP for the killer(s)",
             ["DisplayTitle"] = "Killer(s) (ESP)",
-            ["LayoutOrder"] = 4,
+            ["LayoutOrder"] = 9,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
@@ -2024,7 +2410,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["KillersColor"] = {
             ["DisplayDescription"] = "Select a Color for Killer(s) (ESP)",
             ["DisplayTitle"] = "Killer(s) Color",
-            ["LayoutOrder"] = 5,
+            ["LayoutOrder"] = 10,
             ["Savable"] = true,
             ["InstanceType"] = "StringValue",
             ["DefaultInstanceValue"] = "Red",
@@ -2054,7 +2440,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["SurvivorsESP"] = {
             ["DisplayDescription"] = "Enables ESP for the survivor(s)",
             ["DisplayTitle"] = "Survivor(s) (ESP)",
-            ["LayoutOrder"] = 6,
+            ["LayoutOrder"] = 11,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
@@ -2064,7 +2450,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["SurvivorsColor"] = {
             ["DisplayDescription"] = "Select a Color for Survivor(s) (ESP)",
             ["DisplayTitle"] = "Survivor(s) Color",
-            ["LayoutOrder"] = 7,
+            ["LayoutOrder"] = 12,
             ["Savable"] = true,
             ["InstanceType"] = "StringValue",
             ["DefaultInstanceValue"] = "Green",
@@ -2094,7 +2480,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["GeneratorsESP"] = {
             ["DisplayDescription"] = "Enables ESP for the Generator(s)",
             ["DisplayTitle"] = "Generator(s) (ESP)",
-            ["LayoutOrder"] = 9,
+            ["LayoutOrder"] = 13,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
@@ -2104,7 +2490,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["GeneratorsColor"] = {
             ["DisplayDescription"] = "Select a Color for Generator(s) (ESP)",
             ["DisplayTitle"] = "Generator(s) Color",
-            ["LayoutOrder"] = 10,
+            ["LayoutOrder"] = 14,
             ["Savable"] = true,
             ["InstanceType"] = "StringValue",
             ["DefaultInstanceValue"] = "Cyan",
@@ -2142,7 +2528,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["GeneratorsCheck"] = {
             ["DisplayDescription"] = "Hides Generator(s) That are Completed (ESP)",
             ["DisplayTitle"] = "Hide Completed Generator(s)",
-            ["LayoutOrder"] = 11,
+            ["LayoutOrder"] = 15,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = true,
@@ -2152,7 +2538,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["ItemsESP"] = {
             ["DisplayDescription"] = "Enables ESP for the Item(s)",
             ["DisplayTitle"] = "Item(s) (ESP)",
-            ["LayoutOrder"] = 12,
+            ["LayoutOrder"] = 16,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
@@ -2162,7 +2548,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["ItemsColor"] = {
             ["DisplayDescription"] = "Select a Color for Item(s) (ESP)",
             ["DisplayTitle"] = "Item(s) Color",
-            ["LayoutOrder"] = 13,
+            ["LayoutOrder"] = 17,
             ["Savable"] = true,
             ["InstanceType"] = "StringValue",
             ["DefaultInstanceValue"] = "Gold",
@@ -2189,7 +2575,17 @@ local FeatureLoadout; FeatureLoadout = {
                 end
                 GetValue("AutoPickup",true):SetAttribute("DisplayDescription",string.format("Auto-Picks up <b>%s</b> near you",RichTextGradientColor("Items",{Color,DarkerColor})))
             end
-        }
+        },
+        ["OtherESP"] = {
+            ["DisplayDescription"] = "Enables ESP for Other Objects",
+            ["DisplayTitle"] = "Other ESPs",
+            ["LayoutOrder"] = 22,
+            ["Savable"] = true,
+            ["InstanceType"] = "BoolValue",
+            ["DefaultInstanceValue"] = false,
+            ["Requirement"] = "ESP",
+            ["ScriptFunction"] = function(self, Value) end
+        },
     },
     ["Miscellaneous"] = {
         ["TabAttributes"] = {
@@ -2261,10 +2657,44 @@ local FeatureLoadout; FeatureLoadout = {
                 end
             end
         },
+        ["SpoofDevice"] = {
+            ["DisplayDescription"] = "Spoofs the device in profiles",
+            ["DisplayTitle"] = "Spoof Device",
+            ["LayoutOrder"] = 4,
+            ["Savable"] = true,
+            ["InstanceType"] = "StringValue",
+            ["ExtraData"] = {
+                ["Options"] = "Original|PC|Mobile|Console|Nothing",
+            },
+            ["DefaultInstanceValue"] = "Original",
+            ["ScriptFunction"] = function(self,Value,Starting)
+                local InputDevices = {Keyboard = "PC", MouseButton1 = "PC", MouseButton2 = "PC", MouseMovement = "PC", Touch = "Mobile", Gamepad1 = "Console"}
+                if Value == "Original" then
+                    Value = InputDevices[UserInputService:GetLastInputType().Name] or "PC"
+                elseif Value == "Nothing" and Starting then
+                    return 
+                elseif Value == "Nothing" then
+                    Value = nil
+                end
+                if GetValue("OfficialGame") then
+                    Network:FindFirstChildOfClass("RemoteEvent"):FireServer("SetDevice",{Value})
+                else
+                    Network:FindFirstChildOfClass("RemoteEvent"):FireServer("SetDevice",{Value})
+                    Network:FindFirstChildOfClass("RemoteEvent"):FireServer("SetDevice",Value)
+                end
+            end,
+            ["CustomSetup"] = function(self)
+                LocalPlayer:GetAttributeChangedSignal("Device"):Connect(function()
+                    if GetValue("SpoofDevice") ~= "Original" and GetValue("SpoofDevice") ~= "Nothing" and LocalPlayer:GetAttribute("Device") ~= GetValue("SpoofDevice") then
+                        self:ScriptFunction(GetValue("SpoofDevice"))
+                    end
+                end)
+            end
+        },
         ["ShowPrivacy"] = {
             ["DisplayDescription"] = "Shows everyones privacy info",
             ["DisplayTitle"] = "Shows Privacy Info",
-            ["LayoutOrder"] = 4,
+            ["LayoutOrder"] = 5,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
@@ -2353,7 +2783,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["HideInjury"] = {
             ["DisplayDescription"] = "Hides the injured screen and effects used when you are low health",
             ["DisplayTitle"] = "Hide Injured UI/Effects",
-            ["LayoutOrder"] = 5,
+            ["LayoutOrder"] = 6,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = true,
@@ -2379,7 +2809,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["DisableBlindness"] = {
             ["DisplayDescription"] = "Disables the blindness effect",
             ["DisplayTitle"] = "Disable Blindness",
-            ["LayoutOrder"] = 6,
+            ["LayoutOrder"] = 7,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = true,
@@ -2402,7 +2832,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["DeleteRagdolls"] = {
             ["DisplayDescription"] = "Deletes ALL Ragdolls regardless the type of ragdoll for performance",
             ["DisplayTitle"] = "Delete All Ragdolls",
-            ["LayoutOrder"] = 7,
+            ["LayoutOrder"] = 8,
             ["Savable"] = true,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
@@ -2432,11 +2862,11 @@ local FeatureLoadout; FeatureLoadout = {
         ["PlayerSelectCrash"] = {
             ["DisplayDescription"] = "Select a player to crash",
             ["DisplayTitle"] = "Player to crash",
-            ["LayoutOrder"] = 8,
+            ["LayoutOrder"] = 9,
             ["Savable"] = false,
             ["InstanceType"] = "StringValue",
             ["DefaultInstanceValue"] = "None",
-            ["Requirement"] = ReplicatedStorage:FindFirstChild("Nausea",true) and "PrivateServerOwner",
+            ["Requirement"] = "Effect:Nausea|PrivateServerOwner",
             ["UpdatePlayerCrashDrop"] = function(self)
                 local OriginString = self.DefaultInstanceValue
                 local CurrentPlayers = Players:GetPlayers()
@@ -2477,7 +2907,7 @@ local FeatureLoadout; FeatureLoadout = {
             ["Savable"] = false,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
-            ["Requirement"] = ReplicatedStorage:FindFirstChild("Nausea",true) and "PlayerSelectCrash~None|PrivateServerOwner",
+            ["Requirement"] = "Effect:Nausea|PlayerSelectCrash~None|PrivateServerOwner",
             ["ScriptFunction"] = function(self, Value)
                 if Value then
                     self.Instance.Value = false
@@ -2518,11 +2948,11 @@ local FeatureLoadout; FeatureLoadout = {
         ["SkyGlitch"] = {
             ["DisplayDescription"] = "Gives sky glitching effect to everyone (Host Exclusive)",
             ["DisplayTitle"] = "Sky Glitch",
-            ["LayoutOrder"] = 10,
+            ["LayoutOrder"] = 11,
             ["Savable"] = false,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
-            ["Requirement"] = ReplicatedStorage:FindFirstChild("Nausea",true) and "PrivateServerOwner",
+            ["Requirement"] = "Effect:Nausea|PrivateServerOwner",
             ["ScriptFunction"] = function(self, Value)
                 if Value and not workspace:GetAttribute("EffectActive") then
                     workspace:SetAttribute("EffectActive",true)
@@ -2556,7 +2986,7 @@ local FeatureLoadout; FeatureLoadout = {
         ["InstaKill"] = {
             ["DisplayDescription"] = "Allows you to instantly kill anyone (Host Exclusive)",
             ["DisplayTitle"] = "Instant Kill",
-            ["LayoutOrder"] = 11,
+            ["LayoutOrder"] = 12,
             ["Savable"] = false,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
@@ -2587,11 +3017,11 @@ local FeatureLoadout; FeatureLoadout = {
         ["DisableDamage"] = {
             ["DisplayDescription"] = "Disables dealing damage for everyone (Host Exclusive)",
             ["DisplayTitle"] = "Disable Damage",
-            ["LayoutOrder"] = 12,
+            ["LayoutOrder"] = 13,
             ["Savable"] = false,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
-            ["Requirement"] = ReplicatedStorage:FindFirstChild("Strength",true) and "PrivateServerOwner",
+            ["Requirement"] = "Effect:Strength|PrivateServerOwner",
             ["ScriptFunction"] = function(self, Value)
                 if workspace:GetAttribute("DisableDamage") == nil then
                     workspace:SetAttribute("DisableDamage", Value)
@@ -2621,11 +3051,11 @@ local FeatureLoadout; FeatureLoadout = {
         ["DisableAbilityCooldown"] = {
             ["DisplayDescription"] = "Disables the ability cooldown only for you (Host Exclusive)",
             ["DisplayTitle"] = "Disable Ability Cooldown",
-            ["LayoutOrder"] = 13,
+            ["LayoutOrder"] = 14,
             ["Savable"] = false,
             ["InstanceType"] = "BoolValue",
             ["DefaultInstanceValue"] = false,
-            ["Requirement"] = ReplicatedStorage:FindFirstChild("Fatigue",true) and "PrivateServerOwner" or true,
+            ["Requirement"] = "Effect:Fatigue|PrivateServerOwner",
             ["ScriptFunction"] = function(self, Value)
                 if workspace:GetAttribute("DisableAbilityCooldownSelf") == nil then
                     workspace:SetAttribute("DisableAbilityCooldownSelf", Value)
@@ -2737,37 +3167,44 @@ SidePlusButton.Name = "Plus"
 SidePlusButton.Parent = Buttons
 SidePlusButton.LayoutOrder = MainButton.Name == "Settings" and MainButton.LayoutOrder - 1 or MainButton.LayoutOrder + 1
 if NewUIVersion then
-    PlusButton:FindFirstChild("Icon").ImageColor3 = Color3.fromRGB(35, 35, 35)
+    PlusButton:FindFirstChild("Icon").ImageColor3 = Color3.fromRGB(0, 170, 127)
     PlusButton:FindFirstChild("Icon").Image = "rbxassetid://118860705115878"
     PlusButton:FindFirstChild("Text"):FindFirstChild("Name").Text = "Plus"
-    PlusButton:FindFirstChild("Line").ImageColor3 = Color3.fromRGB(35, 35, 35)
-    PlusButton:FindFirstChild("Highlight").ImageColor3 = Color3.fromRGB(35, 35, 35)
-    PlusButton:FindFirstChild("Text"):FindFirstChild("Name").TextColor3 = Color3.fromRGB(35, 35, 35)
-    PlusButton:FindFirstChild("Texture").ImageColor3 = Color3.fromRGB(35, 35, 35)
-    for i,v in PlusButton:FindFirstChild("Text"):GetChildren() do if v:IsA("ImageLabel") then v.ImageColor3 = Color3.fromRGB(15, 15, 15) end end
-    PlusButton:FindFirstChild("BG").ImageColor3 = Color3.fromRGB(15, 15, 15)
-    PlusButton:FindFirstChild("Grunge").ImageColor3 = Color3.fromRGB(25, 25, 25)
+    PlusButton:FindFirstChild("Line").ImageColor3 = Color3.fromRGB(0, 170, 127)
+    PlusButton:FindFirstChild("Highlight").ImageColor3 = Color3.fromRGB(0, 170, 127)
+    PlusButton:FindFirstChild("Text"):FindFirstChild("Name").TextColor3 = Color3.fromRGB(0, 170, 127)
+    PlusButton:FindFirstChild("Texture").ImageColor3 = Color3.fromRGB(0, 170, 127)
+    for i,v in PlusButton:FindFirstChild("Text"):GetChildren() do if v:IsA("ImageLabel") then v.ImageColor3 = Color3.fromRGB(0, 17, 13) end end
+    PlusButton:FindFirstChild("BG").ImageColor3 = Color3.fromRGB(0, 17, 13)
+    PlusButton:FindFirstChild("Grunge").ImageColor3 = Color3.fromRGB(0, 37, 24)
     PlusButton:FindFirstChild("Grunge").ImageTransparency = 0.2
     PlusButton:FindFirstChild("GrungeMain").ImageTransparency = 1
     UIScale.Parent = PlusButton
 else
-    SidePlusButton.Button.ImageColor3 = Color3.fromRGB(35, 35, 35)
-    SidePlusButton.Icon.ImageColor3 = Color3.fromRGB(35, 35, 35)
+    SidePlusButton.Button.ImageColor3 = Color3.fromRGB(0, 170, 127)
+    SidePlusButton.Icon.ImageColor3 = Color3.fromRGB(0, 170, 127)
     SidePlusButton.Icon.Image = "rbxassetid://118860705115878"
-    SidePlusButton.Inverted.ImageColor3 = Color3.fromRGB(75, 75, 75)
-    SidePlusButton.Inverted.ImageTransparency = 1
-    SidePlusButton.InvertedIcon.ImageColor3 = Color3.fromRGB(75, 75, 75)
-    SidePlusButton.InvertedIcon.Image = "rbxassetid://85001556314176"
-    SidePlusButton.InvertedIcon.ImageTransparency = 1
-    PulloutFramePlus.Title.TextColor3 = Color3.fromRGB(35, 35, 35)
+    if SidePlusButton:FindFirstChild("Inverted") then
+        SidePlusButton.Inverted.ImageColor3 = Color3.fromRGB(105, 255, 212)
+        SidePlusButton.Inverted.ImageTransparency = 1
+    end
+    if SidePlusButton:FindFirstChild("InvertedIcon") then
+        SidePlusButton.InvertedIcon.ImageColor3 = Color3.fromRGB(105, 255, 212)
+        SidePlusButton.InvertedIcon.Image = "rbxassetid://85001556314176"
+        SidePlusButton.InvertedIcon.ImageTransparency = 1
+    end
+    PulloutFramePlus.Title.TextColor3 = Color3.fromRGB(0, 170, 127)
     PulloutFramePlus.Position = UDim2.fromScale(0,0.5)
-    PulloutFramePlus.ArtAsset.ImageColor3 = Color3.fromRGB(35, 35, 35)
-    PulloutFramePlus.Inverted.ImageColor3 = Color3.fromRGB(75, 75, 75)
-    PulloutFramePlus.Inverted.ImageTransparency = 1
+    PulloutFramePlus.ArtAsset.ImageColor3 = Color3.fromRGB(0, 170, 127)
+    PulloutFramePlus.ArtAsset.ImageTransparency = 0
+    if PulloutFramePlus:FindFirstChild("Inverted") then
+        PulloutFramePlus.Inverted.ImageColor3 = Color3.fromRGB(105, 255, 212)
+        PulloutFramePlus.Inverted.ImageTransparency = 1
+    end
 end
 
 local Arrow = ReplicatedStorage:FindFirstChild("DropdownArrow",true):Clone()
-Arrow.ImageColor3 = Color3.fromRGB(35, 35, 35)
+Arrow.ImageColor3 = Color3.fromRGB(0, 170, 127)
 Arrow.Parent = SidePlusButton
 Arrow.Position = UDim2.fromScale(1.6,0.5)
 Arrow.AnchorPoint = Vector2.new(0.5,0.5)
@@ -2780,12 +3217,15 @@ PlusMenu.Name = "PlusScreen"
 PlusMenu.Parent = MainUI
 PlusMenu.Visible = false
 PlusMenu.Size = UDim2.new(1,-20,0,0)
-PlusMenu.SettingsContainer.ImageColor3 = Color3.fromRGB(35, 35, 35)
+PlusMenu.SettingsContainer.ImageColor3 = Color3.fromRGB(0, 170, 127)
 PlusMenu.SettingsContainer.BackgroundTransparency = 1
-PlusMenu.SettingsContainer.Contents.ScrollBarImageColor3 = Color3.fromRGB(35, 35, 35)
+PlusMenu.SettingsContainer.Contents.ScrollBarImageColor3 = Color3.fromRGB(0, 170, 127)
 PlusMenu.SettingsContainer.Contents.Size = UDim2.fromScale(0.95,0.935)
 PlusMenu.SettingsContainer.Contents.Position = UDim2.fromScale(0.5,0.035)
 PlusMenu.ZIndex += 25
+PlusMenu:GetPropertyChangedSignal("Visible"):Connect(function()
+    PlusMenu.Visible = PlusMenu:GetAttribute("Visible") and true or false
+end)
 for i,v in PlusMenu.SettingsContainer:GetChildren() do if not (v:IsA("UIAspectRatioConstraint") or v.Name == "Contents") then v:Destroy() end end
 for i,v in PlusMenu.SettingsContainer.Contents:QueryDescendants("Frame,ImageLabel") do v:Destroy() end
 
@@ -2943,16 +3383,16 @@ local function SetButtonState(Active)
         local u4 = {}
         local BGData = {
             ["Active"] = {
-                ["ImageColor3"] = Color3.fromRGB(35, 35, 35)
+                ["ImageColor3"] = Color3.fromRGB(0, 170, 127)
             },
             ["Inactive"] = {
-                ["ImageColor3"] = Color3.fromRGB(15, 15, 15)
+                ["ImageColor3"] = Color3.fromRGB(0, 17, 13)
             }
         }
         u4.BG = BGData
         local GrungeMainData = {
             ["Active"] = {
-                ["ImageColor3"] = Color3.fromRGB(25, 25, 25)
+                ["ImageColor3"] = Color3.fromRGB(0, 37, 24)
             },
             ["Inactive"] = {
                 ["ImageColor3"] = Color3.fromRGB(80, 80, 80)
@@ -2962,38 +3402,38 @@ local function SetButtonState(Active)
         local GrungeData = {
             ["Active"] = {
                 ["ImageTransparency"] = 0,
-                ["ImageColor3"] = Color3.fromRGB(60, 60, 60)
+                ["ImageColor3"] = Color3.fromRGB(0, 229, 171)
             },
             ["Inactive"] = {
                 ["ImageTransparency"] = 0.2,
-                ["ImageColor3"] = Color3.fromRGB(25, 25, 25)
+                ["ImageColor3"] = Color3.fromRGB(0, 37, 24)
             }
         }
         u4.Grunge = GrungeData
         local HighlightData = {
             ["Active"] = {
-                ["ImageColor3"] = Color3.fromRGB(25, 25, 25)
+                ["ImageColor3"] = Color3.fromRGB(0, 37, 24)
             },
             ["Inactive"] = {
-                ["ImageColor3"] = Color3.fromRGB(35, 35, 35)
+                ["ImageColor3"] = Color3.fromRGB(0, 170, 127)
             }
         }
         u4.Highlight = HighlightData
         local IconData = {
             ["Active"] = {
-                ["ImageColor3"] = Color3.fromRGB(25, 25, 25)
+                ["ImageColor3"] = Color3.fromRGB(0, 37, 24)
             },
             ["Inactive"] = {
-                ["ImageColor3"] = Color3.fromRGB(35, 35, 35)
+                ["ImageColor3"] = Color3.fromRGB(0, 170, 127)
             }
         }
         u4.Icon = IconData
         local LineData = {
             ["Active"] = {
-                ["ImageColor3"] = Color3.fromRGB(25, 25, 25)
+                ["ImageColor3"] = Color3.fromRGB(0, 37, 24)
             },
             ["Inactive"] = {
-                ["ImageColor3"] = Color3.fromRGB(35, 35, 35)
+                ["ImageColor3"] = Color3.fromRGB(0, 170, 127)
             }
         }
         u4.Line = LineData
@@ -3001,11 +3441,11 @@ local function SetButtonState(Active)
         for i, Child in TextLabelUI and TextLabelUI:GetChildren() or {} do
             if Child:IsA("TextLabel") then
                 TweenService:Create(Child, TweenInfo.new(0.25), {
-                    ["TextColor3"] = Active and Color3.fromRGB(25, 25, 25) or Color3.fromRGB(35, 35, 35)
+                    ["TextColor3"] = Active and Color3.fromRGB(0, 37, 24) or Color3.fromRGB(0, 170, 127)
                 }):Play()
             elseif Child:IsA("ImageLabel") then
                 TweenService:Create(Child, TweenInfo.new(0.25), {
-                    ["ImageColor3"] = Active and Color3.fromRGB(35, 35, 35) or Color3.fromRGB(15, 15, 15)
+                    ["ImageColor3"] = Active and Color3.fromRGB(0, 170, 127) or Color3.fromRGB(0, 17, 13)
                 }):Play()
             end
         end
@@ -3181,10 +3621,10 @@ end
 
 function DefaultData(Path, Option)
 	if isfile("NaikoScript/ForsakenPlus/" .. Path) then
-		ColoredPrint("Option already exists", "info", Color3.fromRGB(150, 150, 150))
+		ColoredPrint("Option already exists", "info", Color3.fromRGB(252, 210, 150))
 	else
 		writefile("NaikoScript/ForsakenPlus/" .. Path, Option)
-		ColoredPrint("Set default data", "success", Color3.fromRGB(100, 100, 100))
+		ColoredPrint("Set default data", "success", Color3.fromRGB(125, 230, 75))
 	end
     return
 end
@@ -3219,32 +3659,37 @@ end
 if not (game.GameId == 6331902150 or game.GameId == 7464167604) then
     FeatureLoadout["Unofficial"] = {
           ["TabAttributes"] = {
-            ["DisplayTitle"] = '<font color="rgb(100,100,100)">⚠</font>' .. RichTextGradientColor(" SOME FEATURES MAY NOT WORK HERE ",{Color3.fromRGB(80, 80, 80), Color3.fromRGB(40, 40, 40)}) .. '<font color="rgb(100,100,100)">⚠</font>',
+            ["DisplayTitle"] = '<font color="rgb(255,166,0)">⚠</font>' .. RichTextGradientColor(" SOME FEATURES MAY NOT WORK HERE ",{Color3.fromRGB(255, 166, 0), Color3.fromRGB(243, 227, 0)}) .. '<font color="rgb(243, 227, 0)">⚠</font>',
             ["LayoutOrder"] = -1
         }
     }
-    ColoredPrint("This is not the official game which means some of the features may not work as expected.", "warning", Color3.fromRGB(100, 100, 100))
+    ColoredPrint("This is not the official game which means some of the features may not work as expected.", "warning", Color3.fromRGB(255, 166, 0))
 end
 
 FeatureLoadout["EnviromentFunctions"]["TabAttributes"]["DisplayTitle"] = string.format(
     "Script Made by %s | %s    ",
-    RichTextGradientColor("krow",{Color3.fromRGB(50, 50, 50),Color3.fromRGB(15, 15, 15)}),
-    RichTextGradientColor("V"..Version,{Color3.fromRGB(90, 90, 90),Color3.fromRGB(30, 30, 30)})
-)
+    RichTextGradientColor("N‎aiko Sc‎ripts",{Color3.fromRGB(0, 255, 128),Color3.fromRGB(0, 102, 255)}),
+    RichTextGradientColor("V"..Version,{Color3.fromRGB(87, 160, 255),Color3.fromRGB(0, 132, 255)})
+) -- Tryna edit something here?? i can see that... you ain taking that you know..
 
-FeatureLoadout["Visuals"]["DisableNoliNPC"]["DisplayTitle"] = string.format("Disable %s NPC", RichTextGradientColor("Noli's",{Color3.fromRGB(70, 70, 70), Color3.fromRGB(20, 20, 20)}))
-FeatureLoadout["Visuals"]["Disable007n7NPC"]["DisplayTitle"] = string.format("Disable %s NPC", RichTextGradientColor("007n7's",{Color3.fromRGB(70, 70, 70), Color3.fromRGB(20, 20, 20)}))
-FeatureLoadout["Features"]["NoliControl"]["DisplayTitle"] = string.format("Better %s", RichTextGradientColor("Void Rush",{Color3.fromRGB(70, 70, 70), Color3.fromRGB(20, 20, 20)}))
-FeatureLoadout["Features"]["ControllableDash"]["DisplayTitle"] = string.format("Make %s Dash Controllable", RichTextGradientColor("Coolkidd's",{Color3.fromRGB(70, 70, 70), Color3.fromRGB(20, 20, 20)}))
-FeatureLoadout["Automation"]["AutoEscape"]["DisplayDescription"] = string.format("Auto-Escapes <b>%s</b> Hook",RichTextGradientColor("Nosferatu's",{Color3.fromRGB(70, 70, 70), Color3.fromRGB(20, 20, 20)}))
-FeatureLoadout["Automation"]["AutoDisarm"]["DisplayDescription"] = string.format("Auto-Disarms <b>%s</b> Traps",RichTextGradientColor("Azure's",{Color3.fromRGB(70, 70, 70), Color3.fromRGB(20, 20, 20)}))
+FeatureLoadout["Visuals"]["DisableNoliNPC"]["DisplayTitle"] = string.format("Disable %s NPC", RichTextGradientColor("Noli's",{Color3.fromRGB(130, 72, 255), Color3.fromRGB(77, 0, 185)}))
+FeatureLoadout["Visuals"]["Disable007n7NPC"]["DisplayTitle"] = string.format("Disable %s NPC", RichTextGradientColor("007n7's",{Color3.fromRGB(117, 161, 255), Color3.fromRGB(13, 70, 175)}))
+FeatureLoadout["Features"]["NoliControl"]["DisplayTitle"] = string.format("Better %s", RichTextGradientColor("Void Rush",{Color3.fromRGB(240, 90, 253), Color3.fromRGB(141, 0, 197)}))
+FeatureLoadout["Features"]["ControllableDash"]["DisplayTitle"] = string.format("Make %s Dash Controllable", RichTextGradientColor("Coolkidd's",{Color3.fromRGB(255, 22, 22), Color3.fromRGB(175, 13, 13)}))
+FeatureLoadout["Automation"]["AutoEscape"]["DisplayDescription"] = string.format("Auto-Escapes <b>%s</b> Hook",RichTextGradientColor("Nosferatu's",{Color3.fromRGB(192, 15, 24), Color3.fromRGB(108, 20, 9)}))
+FeatureLoadout["Automation"]["AutoDisarm"]["DisplayDescription"] = string.format("Auto-Disarms <b>%s</b> Traps",RichTextGradientColor("Azure's",{Color3.fromRGB(130, 72, 255), Color3.fromRGB(49, 0, 228)}))
 
 local ThreadBindable = Instance.new("BindableEvent")
+local CharacterAddedBindable = Instance.new("BindableEvent")
 task.spawn(function()
     while task.wait(0.1) do
         ThreadBindable:Fire()
     end
 end)
+
+if MainUI:FindFirstChild("ClassicSidebar") then
+    MainUI:FindFirstChild("ClassicSidebar"):Destroy()
+end
 
 local InputDeviceType = {Keyboard = "PC", MouseButton1 = "PC", MouseButton2 = "PC", MouseMovement = "PC", Touch = "Mobile", Gamepad1 = "Console"}
 local Device = InputDeviceType[UserInputService:GetLastInputType().Name]
@@ -3261,6 +3706,7 @@ task.spawn(function()
     local Success,Result
     if tostring(Err):find("cyclic") or s then
         if s then
+            --ColoredPrint("Require does not function completely correctly some features could bug out!","warn", Color3.new(1,0.25,0))
         end 
         if Device == "PC" then
             Success, Result = pcall(function()
@@ -3291,6 +3737,7 @@ task.spawn(function()
     local AnimationPreset = FeatureLoadout["Features"]["AnimationChanger"]
     if IsRequireSupported and KillerAssets and SurvivorAssets and SkinsAssets then
         if ReplicatedStorage:FindFirstChild("Modules") and ReplicatedStorage:FindFirstChild("Modules"):FindFirstChild("Util",true) then
+            --UtilModule = require(ReplicatedStorage:FindFirstChild("Modules"):FindFirstChild("Util",true))
         end
         local AllAssets = {}
         for i,v in KillerAssets:QueryDescendants("ModuleScript#Config") do
@@ -3317,18 +3764,63 @@ task.spawn(function()
             end
             if not AnimationData or not ConfigData.DisplayName then continue end
             local ChosenName = ConfigData.DisplayName:find("Milestone") and string.format("%s %s",ConfigModule.Parent.Parent.Name,ConfigData.DisplayName:gsub("Milestone ","")) or ConfigData.DisplayName
+            AnimationData["OriginalCharacter"] = ConfigModule.Parent
             AllAnimations[ChosenName] = AnimationData
         end
         for i,v in string.split(AnimationPreset["ExtraData"]["Options"], "|") do
             if v ~= "Original" then
                 if not AllAnimations[v] or not AllAnimations[v]["Idle"] then
-                    AnimationPreset["ExtraData"]["Options"] = AnimationPreset["ExtraData"]["Options"]:gsub("|" .. v, "")
+                    AnimationPreset["ExtraData"]["Options"] = AnimationPreset["ExtraData"]["Options"]:gsub("|" .. v, "",1)
                 end
             end
         end
         if AnimationPreset["ExtraData"]["Options"]:gsub("|Default Roblox","") == "Original" then
             AnimationPreset["Requirement"] = true
         end
+        --[[if UtilModule then
+            local AllPlayersSideUI = MainUI:FindFirstChild(LocalPlayer.Name,true) and MainUI:FindFirstChild(LocalPlayer.Name,true).Parent
+            local function HandlePlayerForUI(Player)
+                if AllPlayersSideUI:FindFirstChild(Player.Name) then
+                    local PlayersUI = AllPlayersSideUI:FindFirstChild(Player.Name)
+                    local PlayersData = Player:FindFirstChild("PlayerData")
+                    local Settings = PlayersData and PlayersData:FindFirstChild("Settings")
+                    local Pron = Settings and Settings:FindFirstChild("Pronouns",true)
+                    if Pron and Pron.Value == "discord.gg/Fs47aNrdGF" then
+                        local NoChat = PlayersUI:FindFirstChild("NoChat")
+                        if NoChat then
+                            NoChat.Visible = false
+                        end
+                        local ClonedUI = ReplicatedStorage:FindFirstChild("NoChat",true) and ReplicatedStorage:FindFirstChild("NoChat",true):Clone()
+                        if ClonedUI then
+                            ClonedUI.Name = "FSUser"
+                            ClonedUI.Image = "rbxassetid://118860705115878"
+                            ClonedUI.Parent = PlayersUI
+                            ClonedUI.Visible = true
+                            ClonedUI.AnchorPoint = Vector2.new(0.5,0.425)
+                            ClonedUI.MouseEnter:Connect(function()
+                                UtilModule:CreateTooltip("This is a Forsaken Plus user.")
+                            end)
+                            ClonedUI.MouseLeave:Connect(function()
+                                UtilModule:CreateTooltip("")
+                            end)
+                            if ClonedUI:FindFirstChildOfClass("UIAspectRatioConstraint") then
+                                ClonedUI:FindFirstChildOfClass("UIAspectRatioConstraint").AspectRatio = 1
+                            end
+                        end
+                    end
+                end
+            end
+            if AllPlayersSideUI then
+                for i,v in Players:GetPlayers() do
+                    HandlePlayerForUI(v)
+                end
+                Players.PlayerAdded:Connect(function(v)
+                    task.delay(1.5,function() HandlePlayerForUI(v) end)
+                end)
+            else
+                ColoredPrint("Failed to find PlayerList UI","error")
+            end
+        end]]
     else
         AnimationPreset["Requirement"] = true
     end
@@ -3337,24 +3829,12 @@ task.spawn(function()
     end
 end)
 
-local SupportedOverrides = {"idle","walk","run"}
 
-local function StartSprintDetection()
-    repeat task.wait(0.1) until MainModule["__sprintedEvent"]
-    MainModule["__sprintedEvent"].Event:Connect(function()
-        if GetValue("AnimationChanger") ~= "Original" then
-            UpdateAnim(LocalHumanoid)
-        end
-    end)
-    MainModule["__sprintedEvent"].Destroying:Once(function()
-        StartSprintDetection()
-    end)
-end
-if MainModule then
-    task.spawn(StartSprintDetection)
-end
+
+
 
 local function ActionOnCharacter(Character)
+    task.spawn(SetButtonState,false)
     LocalCharacter = Character
     LocalHumanoid = LocalCharacter and (LocalCharacter:FindFirstChildOfClass("Humanoid") or LocalCharacter:WaitForChild("Humanoid",2)) or nil
     LocalHead = LocalCharacter and (LocalCharacter:FindFirstChild("Head") or LocalCharacter:WaitForChild("Head",2)) or nil
@@ -3363,68 +3843,13 @@ local function ActionOnCharacter(Character)
     SpeedMultipliers = LocalCharacter and (Character:FindFirstChild("SpeedMultipliers") or Character:WaitForChild("SpeedMultipliers",5)) or nil
     ResistanceMultipliers = LocalCharacter and (Character:FindFirstChild("ResistanceMultipliers") or Character:WaitForChild("ResistanceMultipliers",5)) or nil
     FOVMultipliers = LocalCharacter and (Character:FindFirstChild("FOVMultipliers") or Character:WaitForChild("FOVMultipliers",5)) or nil
-    task.spawn(function()
-        SetButtonState(false)
-        OverriddenAnimations = {}
-        LastAnimOriginalUsed = LocalAnimator:GetPlayingAnimationTracks()[1]
-        LocalAnimator.AnimationPlayed:Connect(function(Track)
-            if CanPlayOverrideAnim(LocalCharacter) and MainModule then
-                local Override = Track.Animation:GetAttribute("Overriden")
-                if Override then 
-                end
-                LastAnimOriginalUsed = not Override and Track or LastAnimOriginalUsed
-                local AnimType,CharName = GetAnimationType(tonumber(Track.Animation.AnimationId:match("%d+")))
-                if not Override then
-                    for i,v in SupportedOverrides do
-                        if AnimType and AnimType:lower():find(v:lower()) then
-                            Track:Stop(0)
-                        elseif not AnimType and Track.Looped then
-                            Track:Stop(0)
-                        end
-                    end
-                end
-                local FoundAction = false
-                for i,v in LocalAnimator:GetPlayingAnimationTracks() do
-                    task.spawn(function()
-                        local AnimType,Char,Name = GetAnimationType(v.Animation.AnimationId)
-                        local IsSupported = false
-                        for i,v in SupportedOverrides do
-                            if AnimType and AnimType:lower():find(v:lower()) then
-                                IsSupported = true
-                            end
-                        end
-                        if v.IsPlaying and not IsSupported and not v:GetAttribute("Ignored") then
-                            FoundAction = v
-                        end
-                    end)
-                end
-                if FoundAction and Override then
-                    Track:Stop(0.2)
-                    task.wait(not FoundAction.Looped and FoundAction.Length * 0.95 or 0)
-                    if FoundAction.Looped then
-                        FoundAction.Stopped:Wait()
-                    end
-                    FoundAction:SetAttribute("Ignored",true)
-                    task.delay(0.2,function()
-                        FoundAction:SetAttribute("Ignored",nil)
-                    end)
-                    UpdateAnim(LocalHumanoid)
-                end
-            end
-        end)
-        local MoreThanZero = 0
-        LocalHumanoid:GetPropertyChangedSignal("MoveDirection"):Connect(function()
-            if GetValue("AnimationChanger") ~= "Original" and MoreThanZero ~= (LocalHumanoid.MoveDirection.Magnitude == 0) then
-                MoreThanZero = (LocalHumanoid.MoveDirection.Magnitude == 0)
-                UpdateAnim(LocalHumanoid)
-            end
-        end)
-        task.delay(0.05,UpdateAnim,LocalHumanoid)
-    end)
+    CharacterAddedBindable:Fire()
 end
 
+
+
 if not MainModule then
-    ColoredPrint("Failed to load required modules, some features may be hidden.\n use a different executor that supports 'require' and 'getgc'", "warn", Color3.new(0.3,0.3,0.3))
+    ColoredPrint("Failed to load required modules, some features may be hidden.\n use a different executor that supports 'require' and 'getgc'", "warn", Color3.new(1,0.25,0))
     FeatureLoadout["EnviromentFunctions"]["getgc"]["DefaultInstanceValue"] = false
 end
 
@@ -3450,6 +3875,12 @@ if FeatureLoadout["EnviromentFunctions"]["getgc"]["DefaultInstanceValue"] then
     end)
 end
 
+
+--local readfile = GetFunction(readfile, read_file)
+--local writefile = GetFunction(writefile, write_file)
+--local isfolder = GetFunction(isfolder, is_folder)
+--local isfile = GetFunction(isfile, is_file)
+--local makefolder = GetFunction(makefolder, make_folder)
 local UserType = 1
 if not (readfile and writefile and isfolder and isfile) then
     FeatureLoadout["EnviromentFunctions"]["files"]["DefaultInstanceValue"] = false
@@ -3484,8 +3915,7 @@ if UserType < 3 then
     end)
 end
 
-local hookmetamethod = GetFunction(hookmetamethod, hook_metamethod)
-if not hookmetamethod then
+if not hookmetamethod and not (getrawmetatable and setreadonly) or not getnamecallmethod then
     FeatureLoadout["EnviromentFunctions"]["hookmetamethod"]["DefaultInstanceValue"] = false
 end
 
@@ -3521,7 +3951,6 @@ if GetValue("OfficialGame") then
 end
 
 LocalPlayer.CharacterAdded:Connect(ActionOnCharacter)
-ActionOnCharacter(LocalCharacter or LocalPlayer.Character)
 
 TeleportSound = Instance.new("Sound")
 TeleportSound.Name = "TeleportSound"
@@ -3529,15 +3958,6 @@ TeleportSound.SoundId = "rbxassetid://130359426691991"
 TeleportSound.Parent = CoreGui
 TeleportSound.Volume = 0.001
 TeleportSound:Play()
-
-local fireproximitypromptFunction = GetFunction(fireproximityprompt, fire_proximity_prompt)
-local fireprompt = fireproximitypromptFunction and function(ProximityPrompt)
-    return ProximityPrompt and fireproximitypromptFunction(ProximityPrompt)
-end or function(ProximityPrompt)
-    if ProximityPrompt then
-        ProximityPrompt:InputHoldBegin();ProximityPrompt:InputHoldEnd()
-    end
-end
 
 RoundEvent.Event:Connect(function(Data)
     IsUnderground = false
@@ -3562,115 +3982,258 @@ if NewUIVersion then
         end)
     end
     if not suc or not MenuData then
-        ColoredPrint('\n\n<font size="28"><b>⚠ YOUR EXECUTOR DOES NOT SUPPORT THIS SCRIPT ⚠</b></font>\n\n Switch to a different executor or play a forsaken clone game that uses the V1 UI.\n The executor must fully support "require" function for the script to work here\n', "error", Color3.new(0.3,0.3,0.3))
-        SidePlusButton:Destroy()
-        PlusMenu:Destroy()
-        StarterGui:SetCore("DevConsoleVisible", true)
-        if MainUI:FindFirstChild("UpdateScreen") then
-            MainUI:FindFirstChild("UpdateScreen").Visible = false
-        end
-        return
+        IsRequireSupported = false
+        FeatureLoadout["EnviromentFunctions"]["require"]["DefaultInstanceValue"] = false
     end
-    MenuData.__index = MenuData
-    local UICreator = {}
-    UICreator.__index = UICreator
-    function UICreator.new(MenuName, MenuScreen)
-        local Metaverse = setmetatable({}, UICreator)
-        Metaverse.Menu = MenuScreen:Clone()
-        local MenuToggleBin = Instance.new("BindableEvent")
-        Metaverse.Toggled = MenuToggleBin
-        Metaverse.Button = nil
-        Metaverse.MenuName = MenuName
-        Metaverse.Menu.Visible = false
-        Metaverse.Menu.Size = UDim2.fromScale()
-        Metaverse.Menu.Parent = MainUI
-        for i,v in Metaverse.Menu:QueryDescendants("ScrollingFrame") do
-            v:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
-                v.ScrollBarThickness = v.AbsoluteSize.X / 44
+    local UseFallbackUI = NewUIVersion
+    if UseFallbackUI then
+    	local FallbackSignal = {}
+    	FallbackSignal.__index = FallbackSignal
+    	function FallbackSignal.new()
+    		local self = setmetatable({}, FallbackSignal)
+    		local Bindable = Instance.new("BindableEvent")
+    		self._bindable = Bindable
+    		self.Event = Bindable.Event
+    		function self:Fire(...)
+    			self._bindable:Fire(...)
+    		end
+    		function self:Connect(...)
+    			return self._bindable.Event:Connect(...)
+    		end
+    		return self
+    	end
+    	local FallbackTween = TweenInfo.new(0.25)
+    	local FallbackSizes = {
+    		["Middle"] = {
+    			["Enter"] = UDim2.fromScale(0.985, 0.25),
+    			["Exit"] = UDim2.fromScale(0.95, 0.22)
+    		},
+    		["Bottom"] = {
+    			["Enter"] = UDim2.fromScale(0.645, 0.18),
+    			["Exit"] = UDim2.fromScale(0.606, 0.149)
+    		}
+    	}
+    	local FallbackLook = {
+    		["BG"] = {["Active"] = {["ImageColor3"] = Color3.fromRGB(198, 198, 198)}, ["Inactive"] = {["ImageColor3"] = Color3.fromRGB(8, 8, 8)}},
+    		["GrungeMain"] = {["Active"] = {["ImageColor3"] = Color3.fromRGB(0, 0, 0)}, ["Inactive"] = {["ImageColor3"] = Color3.fromRGB(80, 80, 80)}},
+    		["Grunge"] = {["Active"] = {["ImageColor3"] = Color3.fromRGB(255, 255, 255)}, ["Inactive"] = {["ImageColor3"] = Color3.fromRGB(0, 0, 0)}},
+    		["Highlight"] = {["Active"] = {["ImageColor3"] = Color3.fromRGB(0, 0, 0)}, ["Inactive"] = {["ImageColor3"] = Color3.fromRGB(255, 255, 255)}},
+    		["Icon"] = {["Active"] = {["ImageColor3"] = Color3.fromRGB(0, 0, 0)}, ["Inactive"] = {["ImageColor3"] = Color3.fromRGB(255, 255, 255)}},
+    		["Line"] = {["Active"] = {["ImageColor3"] = Color3.fromRGB(0, 0, 0)}, ["Inactive"] = {["ImageColor3"] = Color3.fromRGB(255, 255, 255)}}
+    	}
+    	local FallbackButton = {}
+    	FallbackButton.__index = FallbackButton
+    	function FallbackButton.new(ButtonFrame, Section)
+    		local self = setmetatable({}, FallbackButton)
+    		self.Instance = ButtonFrame
+    		self.onClick = FallbackSignal.new()
+    		ButtonFrame.MouseEnter:Connect(function()
+    			local Sizes = FallbackSizes[Section]
+    			if Sizes then
+    				TweenService:Create(ButtonFrame, FallbackTween, {["Size"] = Sizes.Enter}):Play()
+    			end
+    			PlaySound("hover")
+    		end)
+    		ButtonFrame.MouseLeave:Connect(function()
+    			local Sizes = FallbackSizes[Section]
+    			if Sizes then
+    				TweenService:Create(ButtonFrame, FallbackTween, {["Size"] = Sizes.Exit}):Play()
+    			end
+    			PlaySound("hoverEnd")
+    		end)
+    		return self
+    	end
+    	function FallbackButton.LoadMenu(self, MenuTable)
+    		self.Menu = MenuTable
+    		self.Instance.Button.MouseButton1Click:Connect(function()
+    			self.onClick:Fire()
+    			self.Menu:ToggleMenu()
+    		end)
+    	end
+    	function FallbackButton.SetAppearanceState(self, State)
+    		local Text = self.Instance.Button:FindFirstChild("Text")
+    		for i, v in Text and Text:GetChildren() or {} do
+    			if v:IsA("TextLabel") then
+    				TweenService:Create(v, FallbackTween, {["TextColor3"] = State and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)}):Play()
+    			elseif v:IsA("ImageLabel") then
+    				TweenService:Create(v, FallbackTween, {["ImageColor3"] = State and Color3.fromRGB(224, 224, 224) or Color3.fromRGB(0, 0, 0)}):Play()
+    			end
+    		end
+    		local Key = State and "Active" or "Inactive"
+    		for i, v in FallbackLook do
+    			local Target = self.Instance.Button:FindFirstChild(i)
+    			if Target then
+    				TweenService:Create(Target, FallbackTween, v[Key]):Play()
+    			end
+    		end
+    	end
+    	MenuData = {
+    		["SidebarMenus"] = {},
+    		["SidebarButtons"] = {},
+    		["PendingSidebarMenus"] = {},
+    		["TogglingMenus"] = nil,
+    		["MenusHidden"] = false,
+    		["onTransitionState"] = FallbackSignal.new(),
+    		["onMenuSwitched"] = FallbackSignal.new(),
+    		["CashDisplay"] = MainUI:FindFirstChild("CashDisplay", true),
+    		["Sidebar"] = SideBar
+    	}
+    	MenuData.__index = MenuData
+    	local function LoadFallbackButton(Name, MenuTable)
+    		local Stored = MenuData.SidebarButtons[Name]
+    		if not Stored then
+    			MenuData.PendingSidebarMenus[Name] = MenuTable
+    			return false
+    		end
+    		Stored.onClick:Connect(function()
+    			MenuData.onMenuSwitched:Fire(Name)
+    		end)
+    		local suc, err = pcall(function()
+    			Stored:LoadMenu(MenuTable)
+    		end)
+    		if not suc then
+    			warn(`Failed to load Sidebar Menu '{Name}' | Button: {err}`)
+    			return false
+    		end
+    		MenuTable.Button = Stored
+    		MenuData.PendingSidebarMenus[Name] = nil
+    		return true
+    	end
+    	local function CloseFallbackMenu(MenuEntry)
+    		MenuEntry.Toggled:Fire(false)
+    		local Blur = Lighting:FindFirstChild("ShopBlur")
+    		if Blur then
+    			TweenService:Create(Blur, FallbackTween, {["Size"] = 0}):Play()
+    			Debris:AddItem(Blur, 0.25)
+    		end
+    		local Zoom = FOVMultipliers:FindFirstChild("ShopZoom")
+    		if Zoom and Zoom:IsA("ValueBase") then
+    			TweenService:Create(Zoom, FallbackTween, {["Value"] = 1}):Play()
+    			Debris:AddItem(Zoom, 0.25)
+    		end
+    		if MenuEntry.MenuName == "Shop" or MenuEntry.MenuName == "UpdateLog" then
+    			MenuEntry.Menu.Visible = false
+    			MenuEntry.Menu:SetAttribute("Visible", false)
+    		else
+    		TweenService:Create(MenuEntry.Menu, FallbackTween, {["Size"] = UDim2.new(1, -20, 0, 0)}):Play()
+    		task.delay(0.25, function()
+    			MenuEntry.Menu.Visible = false
+                MenuEntry.Menu:SetAttribute("Visible", false)
+    		end)
+    		end
+    		if MenuEntry.Button and MenuEntry.MenuName ~= "Plus" then
+    			MenuEntry.Button:SetAppearanceState(false)
+    		end
+    	end
+    	local function OpenFallbackMenu(MenuEntry)
+    		MenuEntry.Toggled:Fire(true)
+    		MenuEntry.Menu.Visible = true
+            MenuEntry.Menu:SetAttribute("Visible", true)
+    		TweenService:Create(MenuEntry.Menu, FallbackTween, {["Size"] = UDim2.new(1, -20, 1, -20)}):Play()
+    		if MenuEntry.Button and MenuEntry.MenuName ~= "Plus" then
+    			MenuEntry.Button:SetAppearanceState(true)
+    		end
+    	end
+    	function MenuData.ToggleMenu(selfdata, OnlyOpen)
+    		local DataSideBar = selfdata._sidebar
+    		if DataSideBar.TogglingMenus then
+    			return
+    		elseif DataSideBar.MenusHidden and selfdata.SidebarButton then
+    			return
+    		elseif OnlyOpen and selfdata.Menu.Visible then
+    			return
+    		end
+    		DataSideBar.TogglingMenus = true
+    		SidePlusButton.Parent.Interactable = false
+            task.delay(0.35, function()
+                SidePlusButton.Parent.Interactable = true
             end)
-        end
-        return Metaverse
+    		local VisibleUI = selfdata.Menu.Visible
+    		PlaySound("select")
+    		local SideBarMenu
+    		for i, v in DataSideBar.SidebarMenus do
+    			if v.Menu ~= selfdata.Menu or VisibleUI then
+    				if v.Menu ~= selfdata.Menu and v.Menu.Visible then
+    					SideBarMenu = v
+    				end
+    				if v.Menu.Visible then
+    					CloseFallbackMenu(v)
+    					SetButtonState(false)
+    				end
+    			end
+    		end
+    		task.delay(0.3 + (SideBarMenu and 0.125 or 0), function()
+    			DataSideBar.TogglingMenus = nil
+    		end)
+    		if SideBarMenu then
+    			task.wait(0.125)
+    			if DataSideBar.MenusHidden then
+    				DataSideBar.TogglingMenus = nil
+    				return
+    			end
+    		end
+    		if not VisibleUI then
+    			OpenFallbackMenu(selfdata)
+    			SetButtonState(true)
+    		else
+    			SetButtonState(false)
+    		end
+    	end
+    	function MenuData.ToggleButtons(self, State)
+    		MenuData.onTransitionState:Fire(State)
+    		SetButtonState(false)
+    		for i, v in MenuData.SidebarMenus do
+    			CloseFallbackMenu(v)
+    			if v.Button then
+    				v.Button:SetAppearanceState(false)
+    			end
+    			task.delay(0.25, function()
+    				v.Menu.Visible = false
+                    v.Menu:SetAttribute("Visible", false)
+    			end)
+    		end
+    	end
+    	function MenuData.ToggleSidebarButtons(self, State)
+    		MenuData.MenusHidden = not State
+    		MenuData.Sidebar.Visible = State
+    		if State then
+    			return
+    		end
+    		self:ToggleButtons(State)
+    	end
+    	function MenuData.CreateSidebarMenu(self, MenuName, MenuScreen)
+    		local Metaverse = setmetatable({}, MenuData)
+    		Metaverse.Menu = MenuScreen:Clone()
+    		Metaverse.Toggled = FallbackSignal.new()
+    		Metaverse.Button = nil
+    		Metaverse.MenuName = MenuName
+    		Metaverse.Menu.Visible = false
+    		Metaverse.Menu.Size = UDim2.fromScale()
+    		Metaverse.Menu.Parent = MainUI
+    		for i, v in Metaverse.Menu:QueryDescendants("ScrollingFrame") do
+    			v:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+    				v.ScrollBarThickness = v.AbsoluteSize.X / 44
+    			end)
+    		end
+    		Metaverse._sidebar = self
+    		Metaverse.SidebarButton = SideBar:FindFirstChild(MenuName, true)
+    		MenuData.SidebarMenus[MenuName] = Metaverse
+    		LoadFallbackButton(MenuName, Metaverse)
+    		return Metaverse
+    	end
+    	for i, v in SideBar:GetChildren() do
+    		for i, v2 in v:GetChildren() do
+    			if v2:IsA("Frame") then
+    				MenuData.SidebarButtons[v2.Name] = FallbackButton.new(v2, v.Name)
+    				local Waiting = MenuData.PendingSidebarMenus[v2.Name]
+    				if Waiting then
+    					LoadFallbackButton(v2.Name, Waiting)
+    				end
+    			end
+    		end
+    	end
     end
-    function UICreator.ToggleMenu(selfdata)
-	local DataSideBar = selfdata._sidebar
-        if DataSideBar.TogglingMenus then
-            return
-        elseif DataSideBar.MenusHidden and selfdata.SidebarButton then
-            return
-        elseif not (false and selfdata.Menu.Visible) then
-            DataSideBar.TogglingMenus = true
-            local VisibleUI = selfdata.Menu.Visible
-            PlaySound("select")
-            local SideBarMenu
-
-            for i, v in DataSideBar.SidebarMenus do
-                if v.Menu ~= selfdata.Menu or VisibleUI then
-                    if v.Menu ~= selfdata.Menu then
-                        if v.Menu.Visible then
-                            SideBarMenu = v
-                        end
-                    end
-                    if v.Menu.Visible then
-                        v.Toggled:Fire(false)
-                        local UIModule = ReplicatedStorage.Systems.Player.UI.Menus:FindFirstChild(v.MenuName)
-                        local success, result = pcall(require, UIModule)
-                        if success and (result and result.OnTransitionState) then
-                            result.OnTransitionState(false)
-                        else
-                            TweenService:Create(v.Menu, BaseTweenInfo, {
-                                ["Size"] = UDim2.new(1, -20, 0, 0)
-                            }):Play()
-                            task.delay(0.25, function()
-                                v.Menu.Visible = false
-                            end)
-                        end
-                        SetButtonState(false)
-                        if v.Button then
-                            v.Button:SetAppearanceState(false)
-                        end
-                    end
-                end
-            end
-            task.delay(0.3 + (SideBarMenu and 0.125 or 0), function()
-                DataSideBar.TogglingMenus = nil
-            end)
-            if SideBarMenu then
-                task.wait(0.125)
-                if DataSideBar.MenusHidden then
-                    DataSideBar.TogglingMenus = nil
-                    return
-                end
-            end
-            if not VisibleUI then
-                selfdata.Toggled:Fire(true)
-                local UIModule = ReplicatedStorage.Systems.Player.UI.Menus:FindFirstChild(selfdata.MenuName)
-                local success, result = pcall(require, UIModule)
-                if success and (result and result.OnTransitionState) then
-                    result.OnTransitionState(true)
-                else
-                    selfdata.Menu.Visible = true
-                    TweenService:Create(selfdata.Menu, BaseTweenInfo, {
-                        ["Size"] = UDim2.new(1, -20, 1, -20)
-                    }):Play()
-                end
-                SetButtonState(true)
-                if selfdata.Button then
-                    selfdata.Button:SetAppearanceState(true)
-                end
-            end
-        end
-    end
-    function MenuData.CreateSidebarMenu(self, MenuName, MenuScreen)
-        local Data = UICreator.new(MenuName, MenuScreen)
-        Data._sidebar = self
-        Data.SidebarButton = Buttons:FindFirstChild(MenuName)
-        task.delay(0, function()
-            Data.Button = MenuData.SidebarButtons[MenuName]
-        end)
-        MenuData.SidebarMenus[MenuName] = Data
-        return Data
-    end
-else
+    else
     MenuData = {
         ["SidebarMenus"] = {},
         ["Sidebars"] = {
@@ -3707,12 +4270,10 @@ else
             MenuData.TogglingMenus = true
             PlaySound("select")
             local Visible = UIData.Menu.Visible
-            for i,v in SideBar:QueryDescendants(`#{Buttons.Name} > Frame:not(#Credits):not(#Spectate):not(#Plus):not(#TesterUi)`) do
-                v.Button.Interactable = false
-                task.delay(0.3, function()
-                    v.Button.Interactable = true
-                end)
-            end
+            SidePlusButton.Parent.Interactable = false
+            task.delay(0.35, function()
+                SidePlusButton.Parent.Interactable = true
+            end)
             for i,Menu in pairs(MenuData.SidebarMenus) do
                 if Menu.Menu ~= UIData.Menu or Visible then
                     if Menu.Menu.Visible then
@@ -3720,14 +4281,23 @@ else
                         
                         TweenService:Create(Menu.Menu, BaseTweenInfo, {["Size"] = UDim2.new(1, -20, 0, 0)}):Play()
                         if Menu.SidebarButton then
-                            TweenService:Create(Menu.SidebarButton.Inverted, BaseTweenInfo, {["ImageTransparency"] = 1}):Play()
-                            TweenService:Create(Menu.SidebarButton.InvertedIcon, BaseTweenInfo, {["ImageTransparency"] = 1}):Play()
-                            TweenService:Create(Menu.SidebarButton.PulloutHolder.PulloutFrame.Inverted, BaseTweenInfo, {["ImageTransparency"] = 1}):Play()
-                            TweenService:Create(Menu.SidebarButton.PulloutHolder.PulloutFrame.Title, BaseTweenInfo, {
-                                ["TextColor3"] = Menu.Menu.Name == "PlusScreen" and Color3.fromRGB(0, 170, 127) or Color3.new(1,1,1) 
-                            }):Play()
+                            if Menu.SidebarButton:FindFirstChild("Inverted") then
+                                TweenService:Create(Menu.SidebarButton.Inverted, BaseTweenInfo, {["ImageTransparency"] = 1}):Play()
+                            end
+                            if Menu.SidebarButton:FindFirstChild("InvertedIcon") then
+                                TweenService:Create(Menu.SidebarButton.InvertedIcon, BaseTweenInfo, {["ImageTransparency"] = 1}):Play()
+                            end
+                            if Menu.SidebarButton.PulloutHolder.PulloutFrame:FindFirstChild("Inverted") then
+                                TweenService:Create(Menu.SidebarButton.PulloutHolder.PulloutFrame.Inverted, BaseTweenInfo, {["ImageTransparency"] = 1}):Play()
+                            end
+                            if Menu.SidebarButton.PulloutHolder.PulloutFrame:FindFirstChild("Title") then
+                                TweenService:Create(Menu.SidebarButton.PulloutHolder.PulloutFrame.Title, BaseTweenInfo, {
+                                    ["TextColor3"] = Menu.Menu.Name == "PlusScreen" and Color3.fromRGB(0, 170, 127) or Color3.new(1,1,1)
+                                }):Play()
+                            end
                         end
                         task.delay(0.25, function()
+                            Menu.Menu:SetAttribute("Visible", false)
                             Menu.Menu.Visible = false
                         end)
                     end
@@ -3741,13 +4311,22 @@ else
             end
             if not Visible then
                 UIData.__toggleEvent:Fire(true)
+                UIData.Menu:SetAttribute("Visible", true)
                 UIData.Menu.Visible = true
                 TweenService:Create(UIData.Menu, BaseTweenInfo, {["Size"] = UDim2.new(1, -20, 1, -20)}):Play()
                 if UIData.SidebarButton then
-                    TweenService:Create(UIData.SidebarButton.Inverted, BaseTweenInfo, {["ImageTransparency"] = 0}):Play()
-                    TweenService:Create(UIData.SidebarButton.InvertedIcon, BaseTweenInfo, {["ImageTransparency"] = 0}):Play()
-                    TweenService:Create(UIData.SidebarButton.PulloutHolder.PulloutFrame.Inverted, BaseTweenInfo, {["ImageTransparency"] = 0}):Play()
-                    TweenService:Create(UIData.SidebarButton.PulloutHolder.PulloutFrame.Title, BaseTweenInfo, {["TextColor3"] = Color3.new()}):Play()
+                    if UIData.SidebarButton:FindFirstChild("Inverted") then
+                        TweenService:Create(UIData.SidebarButton.Inverted, BaseTweenInfo, {["ImageTransparency"] = 0}):Play()
+                    end
+                    if UIData.SidebarButton:FindFirstChild("InvertedIcon") then
+                        TweenService:Create(UIData.SidebarButton.InvertedIcon, BaseTweenInfo, {["ImageTransparency"] = 0}):Play()
+                    end
+                    if UIData.SidebarButton.PulloutHolder.PulloutFrame:FindFirstChild("Inverted") then
+                        TweenService:Create(UIData.SidebarButton.PulloutHolder.PulloutFrame.Inverted, BaseTweenInfo, {["ImageTransparency"] = 0}):Play()
+                    end
+                    if UIData.SidebarButton.PulloutHolder.PulloutFrame:FindFirstChild("Title") then
+                        TweenService:Create(UIData.SidebarButton.PulloutHolder.PulloutFrame.Title, BaseTweenInfo, {["TextColor3"] = Color3.fromRGB(0, 170, 127)}):Play()
+                    end
                 end
             end
         end
@@ -4109,9 +4688,6 @@ local function SetupSettingUI(SettingInstance, TabSectionFolder,TableFeature)
                     end
                 end)
                 Seperator.Parent = Contents
-                --[[for i,v in pairs(SettingInstance:GetChildren()) do
-                    SetupSettingUI(v,SettingInstance,TableFeature)
-                end]]
             elseif SettingInstance:IsA("ValueBase") then
                 local SettingType = Templates:FindFirstChild(SettingInstance:GetAttribute("TemplateType") or string.gsub(SettingInstance.ClassName, "Value", ""))
                 for i,Child in pairs(Templates:GetChildren()) do
@@ -4218,6 +4794,22 @@ local function SetupSettingUI(SettingInstance, TabSectionFolder,TableFeature)
                                     end
                                 end)
                             end
+                        elseif Requirement:find(":") then
+                            local SplitData = string.split(Requirement, ":")
+                            local Value = SplitData[2]
+                            local ToCheck = SplitData[1]
+                            if ToCheck:lower():find("killer") then
+                                Requirements[Requirement] = KillerAssets and (KillerAssets:FindFirstChild(Value) or KillerAssets:FindFirstChild("!"..Value)) and true or false
+                            elseif ToCheck:lower():find("survivor") then
+                                Requirements[Requirement] = SurvivorAssets and (SurvivorAssets:FindFirstChild(Value) or SurvivorAssets:FindFirstChild("!"..Value)) and true or false
+                            elseif ToCheck:lower():find("gameid") then
+                                Requirements[Requirement] = Value:gsub("[^%d]","") ~= "" and game.GameId == tonumber(Value:gsub("[^%d]",""))
+                            elseif ToCheck:lower():find("placeid") then
+                                Requirements[Requirement] = Value:gsub("[^%d]","") ~= "" and game.PlaceId == tonumber(Value:gsub("[^%d]",""))
+                            elseif ToCheck:lower():find("status") or ToCheck:lower():find("effect") then
+                                Requirements[Requirement] = StatusEffects and StatusEffects:FindFirstChild(Value,true) and true or false
+                            end
+                            BindableCallCheckRequirement:Fire()
                         end
                     end
                     PlusFolderSettings.DescendantAdded:Connect(function(Child)
@@ -4225,7 +4817,7 @@ local function SetupSettingUI(SettingInstance, TabSectionFolder,TableFeature)
                             return
                         end
                         for Requirement,v in pairs(Requirements) do
-                            if type(Requirement) == "string" and not Requirement:find("=") and not Requirement:find("~") and Requirement == Child.Name then
+                            if type(Requirement) == "string" and not Requirement:find("=") and not Requirement:find("~") and not Requirement:find(":") and Requirement == Child.Name then
                                 Requirements[Requirement] = Child.Value
                                 Child:GetPropertyChangedSignal("Value"):Connect(function()
                                     Requirements[Requirement] = Child.Value
@@ -4280,14 +4872,9 @@ local function SetupSettingUI(SettingInstance, TabSectionFolder,TableFeature)
                                 SettingFeature:ScriptFunction(SettingUI.Value,Starting or false)
                             end
                         end)
-                        if LocalCharacter then
+                        CharacterAddedBindable.Event:Connect(function()
                             if SettingFeature.CharacterAdded then
                                 task.spawn(SettingFeature.CharacterAdded,SettingFeature)
-                            end
-                        end
-                        LocalPlayer.CharacterAdded:Connect(function()
-                            if SettingFeature.CharacterAdded then
-                                task.delay(0,SettingFeature.CharacterAdded,SettingFeature)
                             end
                         end)
                         if SettingFeature.OnLoop then
@@ -4494,11 +5081,7 @@ function Initializer.Start()
     for TabName, TabContents in FeatureLoadout do
         task.spawn(HandleUIFeatures,TabName,TabContents)
     end
-    --[[task.spawn(function()
-        for i,Child in pairs(PlusFolderSettings:GetChildren()) do
-            SetupSettingUI(Child)
-        end
-    end)]]
+
     task.spawn(function()
         if game.GameId == 6331902150 then
             local JsonVersionData
@@ -4535,7 +5118,6 @@ function Initializer.Start()
                     }
                 }
                 local Folder = HandleUIFeatures("Outdated",FeatureLoadout["Outdated"])
-                --SetupSettingUI(Folder)
                 ColoredPrint(`The game has updated and it has been detected that the script has not been tested/updated for this version.\n{GetValue("DisableAllFeatures") and "All features have been disabled by default to prevent from you possibly getting detected.\n" or ""}Use the features with caution or wait for a update from the script.`, "warning", Color3.fromRGB(255, 166, 0))
                 if GetValue("DisableAllFeatures") then
                     print("Disabling all features")
@@ -4557,15 +5139,31 @@ function Initializer.Start()
     end)
 end
 
---[[for TabName, TabContents in FeatureLoadout do
-    task.spawn(HandleUIFeatures,TabName,TabContents)
-end]]
-
 Initializer.Start()
 
 if SidePlusButton:IsA("Frame") then
     task.spawn(function()
         local Menu = MenuData.SidebarMenus[SidePlusButton.Name]
+        if NewUIVersion then
+            for i, v in MainUI:GetChildren() do
+                if v ~= PlusMenu and (v.Name):find("Screen") or v.Name == "Shop" or v.Name == "SwitchServer" then
+                    local ButtonName = v.Name:gsub("Screen", "")
+                    if ButtonName == "Update" then ButtonName = "UpdateLog" end
+                    if ButtonName == "SwitchServer" then ButtonName = "ServerList" end
+                    if MenuData.SidebarMenus[ButtonName] == nil then
+                        local ToggleEvent = Instance.new("BindableEvent")
+                        MenuData.SidebarMenus[ButtonName] = {
+                            ["Menu"] = v,
+                            ["MenuName"] = ButtonName,
+                            ["SidebarButton"] = SideBar:FindFirstChild(ButtonName, true),
+                            ["Button"] = MenuData.SidebarButtons[ButtonName],
+                            ["Toggled"] = ToggleEvent,
+                            ["_sidebar"] = MenuData
+                        }
+                    end
+                end
+            end
+        end
         if NewUIVersion then
             local CountingMod = false
             if Menu then
@@ -4573,8 +5171,10 @@ if SidePlusButton:IsA("Frame") then
                     MenuData.SidebarMenus["Plus"]["_sidebar"]["MenusHidden"] = false
                     if not PlusMenu.Visible then
                         for i,v in MainUI:GetChildren() do
-                            if v ~= PlusMenu and (v.Name):find("Screen") or v.Name == "Shop" then
-                                local ButtonName = v.Name:gsub("Screen","")
+                        if v ~= PlusMenu and (v.Name):find("Screen") or v.Name == "Shop" or v.Name == "SwitchServer" then
+                            local ButtonName = v.Name:gsub("Screen","")
+                            if ButtonName == "Update" then ButtonName = "UpdateLog" end
+                            if ButtonName == "SwitchServer" then ButtonName = "ServerList" end
                                 local Button = SideBar:FindFirstChild(ButtonName,true)
                                 if not Button and ButtonName ~= "Mod" then continue end
                                 if (MenuData.SidebarMenus[ButtonName] and not MenuData.SidebarMenus[ButtonName]["Checked"]) or (ButtonName == "Mod" and not CountingMod) then
@@ -4586,7 +5186,23 @@ if SidePlusButton:IsA("Frame") then
                                     if Button then
                                         Button.Button.MouseButton1Click:Connect(function()
                                             if PlusMenu.Visible and MenuData.TogglingMenus == nil then
+                                                MenuData.TogglingMenus = true
+                                                local PlusEntry = MenuData.SidebarMenus["Plus"]
+                                                if PlusEntry then
+                                                    PlusEntry.Toggled:Fire(false)
+                                                    TweenService:Create(PlusMenu, BaseTweenInfo, {["Size"] = UDim2.new(1, -20, 0, 0)}):Play()
+                                                    task.delay(0.25, function()
+                                                        PlusMenu.Visible = false
+                                                        PlusMenu:SetAttribute("Visible", false)
+                                                    end)
+                                                    if PlusEntry.Button then
+                                                        PlusEntry.Button:SetAppearanceState(false)
+                                                    end
+                                                end
                                                 SetButtonState(false)
+                                                task.delay(0.3, function()
+                                                    MenuData.TogglingMenus = nil
+                                                end)
                                             end
                                         end)
                                     elseif ButtonName == "Mod" and PlayerGui.TopbarStandard.Holders.Left:FindFirstChild("Widget") then
@@ -4600,7 +5216,23 @@ if SidePlusButton:IsA("Frame") then
                                         if TopMod then
                                             TopMod.IconButton.Menu.IconSpot.ClickRegion.MouseButton1Click:Connect(function()
                                                 if PlusMenu.Visible and MenuData.TogglingMenus == nil then
+                                                    MenuData.TogglingMenus = true
+                                                    local PlusEntry = MenuData.SidebarMenus["Plus"]
+                                                    if PlusEntry then
+                                                        PlusEntry.Toggled:Fire(false)
+                                                        TweenService:Create(PlusMenu, BaseTweenInfo, {["Size"] = UDim2.new(1, -20, 0, 0)}):Play()
+                                                        task.delay(0.25, function()
+                                                            PlusMenu.Visible = false
+                                                            PlusMenu:SetAttribute("Visible", false)
+                                                        end)
+                                                        if PlusEntry.Button then
+                                                            PlusEntry.Button:SetAppearanceState(false)
+                                                        end
+                                                    end
                                                     SetButtonState(false)
+                                                    task.delay(0.3, function()
+                                                        MenuData.TogglingMenus = nil
+                                                    end)
                                                 end
                                             end)
                                         end
@@ -4608,9 +5240,6 @@ if SidePlusButton:IsA("Frame") then
                                 end
                             end
                         end
-                    end
-                    if MenuData.TogglingMenus == nil then
-                        Menu:ToggleMenu()
                     end
                 end)
             end
@@ -4709,11 +5338,14 @@ end
 local function UICheck()
     local Status = SideBar:GetAttribute("WasVisible")
     SetButtonState(false)
+    local LayoutInstance = Buttons and Buttons:FindFirstChildOfClass("UIListLayout") or Buttons and Buttons:FindFirstChildOfClass("UIGridLayout")
+    if not LayoutInstance:GetAttribute("VerticalAlignment") then
+        LayoutInstance:SetAttribute("VerticalAlignment", LayoutInstance.VerticalAlignment)
+    end
     if Status then
         if not NewUIVersion then
-            local LayoutInstance = Buttons:FindFirstChildOfClass("UIListLayout") or Buttons:FindFirstChildOfClass("UIGridLayout")
             if LayoutInstance then
-                LayoutInstance.VerticalAlignment = Enum.VerticalAlignment.Top
+                LayoutInstance.VerticalAlignment = LayoutInstance:GetAttribute("VerticalAlignment")
             end
         else
             SideBar:FindFirstChildOfClass("UIPadding").PaddingRight = UDim.new(0.2,0)
@@ -4746,7 +5378,6 @@ local function UICheck()
             SideBar:FindFirstChildOfClass("UIPadding").PaddingLeft = UDim.new(0.2,0)
             UIScale.Scale = 1.3
         end
-        local LayoutInstance = Buttons:FindFirstChildOfClass("UIListLayout") or Buttons:FindFirstChildOfClass("UIGridLayout")
         if LayoutInstance then
             LayoutInstance.VerticalAlignment = Enum.VerticalAlignment.Center
         end
@@ -4767,13 +5398,24 @@ local function UICheck()
             end
         end
     end
-    for i,v in SideBar:QueryDescendants(`#Bottom > Frame, #Money , #Bottombar , #{Buttons} > Frame {((not NewUIVersion) and ":not(#Credits)" or "")} :not(#TesterUi)`) do
-        if not v:GetAttribute("Visibility") then
+    for i,v in SideBar:QueryDescendants(`#Bottom > Frame, > ImageLabel , #Bottombar , #{Buttons.Name} > Frame {((not NewUIVersion) and false and ":not(#Credits)" or "")} :not(#TesterUi)`) do
+        if not v:GetAttribute("Visibility") and (not v.Name:lower():find("credit") or v.Parent ~= SidePlusButton.Parent) then
             v:SetAttribute("Visibility",v.Visible)
         end
-        v.Visible = Status and v:GetAttribute("Visibility")
+        v.Visible = Status and v:GetAttribute("Visibility") or false
     end
     SidePlusButton.Visible = true
+        if NewUIVersion then
+            local PlusEntry = MenuData.SidebarMenus["Plus"]
+            if PlusEntry and PlusMenu.Visible then
+                PlusEntry.Toggled:Fire(false)
+                TweenService:Create(PlusMenu, BaseTweenInfo, {["Size"] = UDim2.new(1, -20, 0, 0)}):Play()
+                task.delay(0.25, function()
+                PlusMenu.Visible = false
+                PlusMenu:SetAttribute("Visible", false)
+                end)
+            end
+        end
     if not Status then
         RoundEvent:Fire("Start")
     else
@@ -4783,18 +5425,6 @@ end
 
 MainUI.ChildAdded:Connect(function(Child)
     if Child.Name == "AbilityContainer" then
-        --[[if Child:FindFirstChild("Block") and not Child:FindFirstChild("Block"):FindFirstChild("AutoImage") then
-            local AutoImage = Instance.new("ImageLabel")
-            AutoImage.Name = "AutoImage"
-            AutoImage.Interactable = false
-            AutoImage.Parent = Child:FindFirstChild("Block")
-            AutoImage.Image = "rbxassetid://114159864966636"
-            AutoImage.BackgroundTransparency = 1
-            AutoImage.Size = UDim2.fromScale(0.8,0.8)
-            AutoImage.Position = UDim2.fromScale(0.5,0)
-            AutoImage.AnchorPoint = Vector2.new(0.5,0.4)
-            AutoImage.Visible = GetValue("AutoBlock") and LocalCharacter.Parent.Name:find("Survi")
-        end]]
         SideBar:SetAttribute("WasVisible", false)
         UICheck()
     end
@@ -4811,5 +5441,6 @@ end)
 SideBar:SetAttribute("WasVisible",(MainUI:FindFirstChild("AbilityContainer") == nil))
 UICheck()
 SideBar.Visible = true
+task.spawn(ActionOnCharacter,LocalCharacter or LocalPlayer.Character)
 
-ColoredPrint("Forsaken+ has loaded successfully","success",Color3.fromRGB(0, 200, 125))
+ColoredPrint("Forsaken plus has loaded successfully","success",Color3.fromRGB(0, 200, 125))
